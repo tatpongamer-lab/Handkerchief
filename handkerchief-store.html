@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="th" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>แคแสดในความทรงจำ | Cassia Memory | Pre-order</title>
+    <meta name="description" content="แคแสดในความทรงจำ — ให้ลายสกอตและกระต่ายน้อยขี่เมฆ ช่วยเก็บรักษาเรื่องราวที่สวยงามของเรา">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Prompt:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        navy: '#0F172A',
+                        navyLight: '#1E293B',
+                        cream: '#F5F0E8',
+                        orange: '#E8700A',
+                        orangeLight: '#FF8C2D',
+                        gold: '#D4A857',
+                        charcoal: '#1A1A1A',
+                        slate: '#94A3B8',
+                        surface: '#182033',
+                    },
+                    fontFamily: {
+                        heading: ['"Playfair Display"', 'serif'],
+                        body: ['"Prompt"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Prompt', sans-serif; }
+        ::-webkit-scrollbar { width: 3px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 4px; }
+
+        /* Animations */
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes scaleIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+        @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+        @keyframes pulse-ring { 0% { transform: scale(0.8); opacity: 1; } 100% { transform: scale(1.4); opacity: 0; } }
+        .animate-fade-in { animation: fadeIn 0.8s ease-out both; }
+        .animate-slide-up { animation: slideUp 0.8s ease-out both; }
+        .animate-scale-in { animation: scaleIn 0.6s ease-out both; }
+        .animate-float { animation: float 4s ease-in-out infinite; }
+        .delay-100 { animation-delay: 0.1s; }
+        .delay-200 { animation-delay: 0.2s; }
+        .delay-300 { animation-delay: 0.3s; }
+        .delay-400 { animation-delay: 0.4s; }
+        .delay-500 { animation-delay: 0.5s; }
+
+        /* Custom styling */
+        .gold-divider { height: 1px; background: linear-gradient(90deg, transparent, #D4A857 30%, #D4A857 70%, transparent); }
+        .section-fade { background: linear-gradient(to bottom, rgba(15,23,42,0) 0%, rgba(15,23,42,1) 100%); }
+        .hero-gradient { background: linear-gradient(to bottom, transparent 50%, #0F172A 100%); }
+
+        .glass-card {
+            background: rgba(30, 41, 59, 0.6);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(212, 168, 87, 0.15);
+        }
+
+        /* Floating CTA */
+        .floating-cta {
+            background: linear-gradient(135deg, #E8700A 0%, #FF8C2D 100%);
+            box-shadow: 0 8px 32px rgba(232, 112, 10, 0.35), 0 0 0 1px rgba(255,255,255,0.05) inset;
+        }
+        .floating-cta:active { transform: scale(0.96); }
+
+        /* Input styling */
+        .luxury-input {
+            background: rgba(30, 41, 59, 0.5);
+            border: 1px solid rgba(212, 168, 87, 0.2);
+            color: #F5F0E8;
+            transition: all 0.3s ease;
+        }
+        .luxury-input:focus {
+            background: rgba(30, 41, 59, 0.8);
+            border-color: #D4A857;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(212, 168, 87, 0.1);
+        }
+        .luxury-input::placeholder { color: rgba(148, 163, 184, 0.5); }
+
+        /* Radio buttons */
+        .luxury-radio { accent-color: #D4A857; }
+
+        /* Hide scrollbar */
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* Store closed overlay */
+        #store-closed-overlay { display: flex; animation: fadeIn 0.5s ease-out; }
+        #store-closed-overlay.hidden { display: none !important; }
+        #closed-tracking-section { max-height: 0; overflow: hidden; opacity: 0; transition: max-height 0.4s ease, opacity 0.3s ease, margin 0.3s ease; }
+        #closed-tracking-section.open { max-height: 70vh; opacity: 1; margin-top: 1rem; }
+        #closed-track-toggle-icon { transition: transform 0.3s ease; }
+        #closed-track-toggle-icon.rotated { transform: rotate(180deg); }
+
+        /* Checkout section transitions */
+        #checkout-section { max-height: 0; overflow: hidden; opacity: 0; transition: max-height 0.6s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease, padding 0.4s ease; }
+        #checkout-section.open { max-height: 3000px; opacity: 1; }
+
+        /* Tracking section transitions */
+        #tracking-section { max-height: 0; overflow: hidden; opacity: 0; transition: max-height 0.5s ease, opacity 0.3s ease; }
+        #tracking-section.open { max-height: 2000px; opacity: 1; }
+
+        /* Image gallery */
+        .gallery-thumb { opacity: 0.5; border: 2px solid transparent; transition: all 0.3s ease; }
+        .gallery-thumb.active { opacity: 1; border-color: #D4A857; }
+
+        /* Drop zone */
+        .drop-zone.dragover { border-color: #D4A857 !important; background: rgba(212, 168, 87, 0.1) !important; }
+    </style>
+</head>
+<body class="bg-navy text-cream font-body antialiased">
+
+    <!-- Store Closed Overlay -->
+    <div id="store-closed-overlay" class="fixed inset-0 z-[90] hidden flex-col items-center bg-navy/98 backdrop-blur-xl overflow-y-auto">
+        <div class="w-full max-w-lg mx-auto px-8 pt-20 pb-8 flex flex-col items-center">
+            <div class="w-20 h-20 border border-gold/30 rounded-full flex items-center justify-center mx-auto mb-8">
+                <i class="ph ph-storefront text-4xl text-gold"></i>
+            </div>
+            <h2 class="text-3xl font-heading font-bold text-cream mb-4 text-center tracking-wide">ร้านค้าปิดชั่วคราว</h2>
+            <p class="text-slate text-sm mb-6 text-center leading-relaxed">ขออภัย ระบบร้านค้าปิดให้บริการชั่วคราว<br>กรุณากลับมาใหม่ในภายหลัง</p>
+            <div class="gold-divider w-16 mx-auto mb-8"></div>
+
+            <div class="w-full">
+                <button onclick="app.toggleClosedTracking()"
+                    class="w-full flex items-center justify-center gap-2.5 px-5 py-3.5 rounded-xl glass-card text-gold font-medium text-sm hover:bg-gold/10 active:scale-[0.97] transition-all duration-200">
+                    <i class="ph ph-package text-lg"></i>
+                    <span>ตรวจสอบสถานะคำสั่งซื้อ</span>
+                    <i class="ph ph-caret-down text-sm" id="closed-track-toggle-icon"></i>
+                </button>
+                <div id="closed-tracking-section" class="w-full">
+                    <div class="flex gap-2 mt-4">
+                        <input type="tel" id="closed-track-phone" placeholder="เบอร์โทรศัพท์ที่ใช้สั่งซื้อ"
+                            class="flex-1 p-3 rounded-xl luxury-input text-sm">
+                        <button onclick="app.searchOrdersClosed()" id="closed-track-btn"
+                            class="floating-cta text-white px-5 rounded-xl text-sm font-bold active:scale-95 transition-transform flex items-center gap-1.5 whitespace-nowrap">
+                            <i class="ph ph-magnifying-glass"></i> ค้นหา
+                        </button>
+                    </div>
+                    <div id="closed-tracking-results" class="mt-4 space-y-3 pb-4">
+                        <div class="flex flex-col items-center justify-center py-8 text-slate/40">
+                            <i class="ph ph-package text-5xl mb-3"></i>
+                            <p class="text-sm font-medium text-slate/60">ค้นหาด้วยเบอร์โทรศัพท์</p>
+                            <p class="text-[11px] mt-1 text-slate/40">เพื่อดูสถานะออเดอร์ของคุณ</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="w-full max-w-lg mx-auto min-h-screen relative overflow-x-hidden">
+
+        <!-- Transparent Header -->
+        <header id="main-header" class="fixed top-0 left-0 right-0 max-w-lg mx-auto z-50 px-5 py-4 flex justify-between items-center transition-all duration-500">
+            <div class="font-heading text-gold text-lg tracking-wider">
+                <span class="font-semibold">Cassia Memory</span>
+            </div>
+            <button onclick="app.toggleTracking()" class="w-10 h-10 rounded-full glass-card flex items-center justify-center text-cream/80 hover:text-gold transition-colors" title="ตรวจสอบออเดอร์">
+                <i class="ph ph-magnifying-glass text-lg"></i>
+            </button>
+        </header>
+
+        <!-- Hero Section -->
+        <section id="hero-section" class="relative w-full">
+            <!-- Main Hero Image -->
+            <div class="relative w-full aspect-[9/14] overflow-hidden bg-navy">
+                <img id="main-hero-img" src="image/luxury-hero.jpg" alt="แคแสดในความทรงจำ | Cassia Memory" 
+                     class="w-full h-full object-cover transition-opacity duration-300 ease-in-out" onclick="app.openLightbox(this.src)">
+                <!-- Bottom gradient overlay -->
+                <div class="absolute bottom-0 left-0 right-0 h-1/2 hero-gradient pointer-events-none"></div>
+            </div>
+
+            <!-- Product Info Overlay (sits on top of gradient) -->
+            <div class="absolute bottom-0 left-0 right-0 px-6 pb-8 z-10">
+                <p class="text-cream/90 text-xs font-light tracking-[0.3em] uppercase mb-2 animate-slide-up">Pre-order Collection</p>
+                <h1 class="font-heading text-3xl md:text-4xl font-bold text-gold leading-tight mb-4 animate-slide-up delay-100">
+                    แคแสดในความทรงจำ
+                </h1>
+                <div class="flex items-end gap-3 animate-slide-up delay-200">
+                    <span class="text-3xl font-heading font-bold text-cream">200.-</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Gallery Thumbnails -->
+        <section class="px-6 py-5 bg-navy">
+            <div class="flex gap-3 overflow-x-auto hide-scrollbar">
+                <button onclick="app.changeHero('image/luxury-hero.jpg', this)" class="gallery-thumb active w-16 h-16 rounded-lg overflow-hidden flex-none">
+                    <img src="image/luxury-hero.jpg" alt="ลายหลัก" class="w-full h-full object-cover">
+                </button>
+                <button onclick="app.changeHero('image/luxury-wrist.jpg', this)" class="gallery-thumb w-16 h-16 rounded-lg overflow-hidden flex-none">
+                    <img src="image/luxury-wrist.jpg" alt="ผูกข้อมือ" class="w-full h-full object-cover">
+                </button>
+                <button onclick="app.changeHero('image/luxury-scarf.jpg', this)" class="gallery-thumb w-16 h-16 rounded-lg overflow-hidden flex-none">
+                    <img src="image/luxury-scarf.jpg" alt="ผ้าพันคอ" class="w-full h-full object-cover">
+                </button>
+                <button onclick="app.changeHero('image/luxury-headband.jpg', this)" class="gallery-thumb w-16 h-16 rounded-lg overflow-hidden flex-none">
+                    <img src="image/luxury-headband.jpg" alt="โพกหัว" class="w-full h-full object-cover">
+                </button>
+                <button onclick="app.changeHero('image/luxury-wipe.jpg', this)" class="gallery-thumb w-16 h-16 rounded-lg overflow-hidden flex-none">
+                    <img src="image/luxury-wipe.jpg" alt="ซับน้ำตา" class="w-full h-full object-cover">
+                </button>
+                <button onclick="app.changeHero('image/luxury-bag.jpg', this)" class="gallery-thumb w-16 h-16 rounded-lg overflow-hidden flex-none">
+                    <img src="image/luxury-bag.jpg" alt="ผูกกระเป๋า" class="w-full h-full object-cover">
+                </button>
+            </div>
+        </section>
+
+        <!-- Divider -->
+        <div class="gold-divider mx-6"></div>
+
+        <!-- Product Details -->
+        <section class="px-6 py-6 bg-navy">
+            <p class="text-sm text-slate leading-relaxed">ให้ลายสกอตและกระต่ายน้อยขี่เมฆ ช่วยเก็บรักษาเรื่องราวที่สวยงามของเรา เพราะบางช่วงเวลา... แม้จะล่วงเลยผ่านไป แต่ก็ยังคงสร้างความอบอุ่นในหัวใจได้ทุกครั้งที่นึกถึง</p>
+        </section>
+
+        <!-- Divider -->
+        <div class="gold-divider mx-6"></div>
+
+        <!-- Order Section (Compact) -->
+        <section id="order-section" class="px-6 py-6 bg-navy">
+            <div class="flex items-center gap-3">
+                <!-- Quantity -->
+                <div class="flex items-center border border-gold/20 rounded-xl overflow-hidden flex-none">
+                    <button onclick="app.adjustQty(-1)" class="w-11 h-12 flex items-center justify-center text-cream hover:bg-gold/10 transition-colors">
+                        <i class="ph ph-minus text-sm"></i>
+                    </button>
+                    <div class="w-12 h-12 flex items-center justify-center font-bold text-cream text-lg bg-surface border-x border-gold/20" id="product-qty">1</div>
+                    <button onclick="app.adjustQty(1)" class="w-11 h-12 flex items-center justify-center text-cream hover:bg-gold/10 transition-colors">
+                        <i class="ph ph-plus text-sm"></i>
+                    </button>
+                </div>
+                <!-- CTA Button -->
+                <button onclick="app.startCheckout()" id="main-cta-btn" class="flex-1 floating-cta text-white h-12 rounded-xl font-semibold text-sm flex items-center justify-center gap-2 transition-all duration-200">
+                    <i class="ph ph-shopping-bag text-lg"></i>
+                    สั่งซื้อเลย
+                </button>
+            </div>
+        </section>
+
+        <!-- Checkout Form (initially hidden, slides open) -->
+        <div id="checkout-section">
+            <div class="px-6 pt-2 pb-8 bg-navy">
+                <div class="gold-divider mb-8"></div>
+                
+                <h2 class="font-heading text-xl font-semibold text-cream mb-6 tracking-wide flex items-center gap-2">
+                    <i class="ph ph-notebook text-gold"></i> กรอกข้อมูลการสั่งซื้อ
+                </h2>
+
+                <form id="checkout-form" class="space-y-6">
+                    <!-- Contact Info -->
+                    <div>
+                        <label class="block text-xs text-gold/80 font-medium mb-2 tracking-wider uppercase">ข้อมูลติดต่อ</label>
+                        <div class="space-y-3">
+                            <input type="text" id="cust-name" required placeholder="ชื่อ-นามสกุล *" class="w-full p-3.5 rounded-xl luxury-input text-sm">
+                            <input type="tel" id="cust-phone" required placeholder="เบอร์โทรศัพท์ 10 หลัก *" maxlength="10" class="w-full p-3.5 rounded-xl luxury-input text-sm">
+                        </div>
+                    </div>
+
+                    <!-- Delivery Method -->
+                    <div>
+                        <label class="block text-xs text-gold/80 font-medium mb-3 tracking-wider uppercase">วิธีรับสินค้า</label>
+                        <div class="grid grid-cols-2 gap-3">
+                            <label class="flex items-center gap-3 glass-card rounded-xl px-4 py-3 cursor-pointer hover:bg-gold/5 transition-colors has-[:checked]:border-gold has-[:checked]:bg-gold/10">
+                                <input type="radio" name="shipping-option" value="ship" checked class="luxury-radio flex-none">
+                                <div class="flex flex-col">
+                                    <span class="text-cream text-sm font-medium">จัดส่ง</span>
+                                    <span class="text-gold text-xs mt-0.5">฿30</span>
+                                </div>
+                            </label>
+                            <label class="flex items-center gap-3 glass-card rounded-xl px-4 py-3 cursor-pointer hover:bg-gold/5 transition-colors has-[:checked]:border-gold has-[:checked]:bg-gold/10">
+                                <input type="radio" name="shipping-option" value="pickup" class="luxury-radio flex-none">
+                                <div class="flex flex-col">
+                                    <span class="text-cream text-sm font-medium">รับร้านยา</span>
+                                    <span class="text-gold text-xs mt-0.5">ฟรี</span>
+                                </div>
+                            </label>
+                        </div>
+                        <div id="pickup-desc" class="hidden mt-3 bg-gold/10 border border-gold/20 rounded-xl p-3 text-xs text-cream/90 flex items-start gap-2">
+                            <i class="ph ph-info text-gold mt-0.5"></i>
+                            <span>รับสินค้าด้วยตัวเองที่ <b>สุมาดีเภสัช สาขา ถ.ศรีธรรมโศก</b></span>
+                        </div>
+                        <div id="address-container" class="mt-3">
+                            <textarea id="cust-address" rows="2" placeholder="กรอกที่อยู่จัดส่งที่นี่..." class="w-full p-3.5 rounded-xl luxury-input text-sm"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Admin Section (hidden) -->
+                    <div id="admin-section" class="hidden">
+                        <label class="block text-xs text-gold/80 font-medium mb-2 tracking-wider uppercase">รหัสผ่าน Admin (สปอนเซอร์)</label>
+                        <input type="password" id="admin-pwd" placeholder="รหัสผ่าน" class="w-full p-3.5 rounded-xl luxury-input text-sm text-center tracking-widest font-mono">
+                    </div>
+
+                    <!-- Payment -->
+                    <div id="payment-section">
+                        <label class="block text-xs text-gold/80 font-medium mb-3 tracking-wider uppercase">ชำระเงิน</label>
+                        <div class="glass-card rounded-xl p-5">
+                            <div class="flex gap-5 items-center">
+                                <div class="flex-none text-center w-28">
+                                    <img src="image/promptpay-qr.jpg" alt="QR Code PromptPay" class="w-28 h-28 mx-auto rounded-lg border border-gold/20 object-contain bg-white shadow-lg">
+                                    <p class="text-[10px] font-medium text-slate mt-2">นายศรันย์ รัตนชูศรี</p>
+                                </div>
+                                <div class="flex-1 flex flex-col justify-center border-l border-gold/10 pl-5">
+                                    <div class="flex justify-between items-center mb-1.5 text-xs">
+                                        <span class="text-slate">ค่าสินค้า:</span>
+                                        <span id="co-subtotal" class="text-cream font-medium">฿200</span>
+                                    </div>
+                                    <div class="flex justify-between items-center mb-2.5 text-xs pb-2.5 border-b border-gold/10">
+                                        <span class="text-slate">ค่าจัดส่ง:</span>
+                                        <span id="co-shipping" class="text-cream font-medium">฿30</span>
+                                    </div>
+                                    <div class="flex justify-between items-center">
+                                        <span class="text-cream text-xs font-medium">ยอดสุทธิ:</span>
+                                        <span id="co-total" class="text-xl font-heading font-bold text-gold">฿230</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Slip Upload -->
+                    <div id="slip-upload-section" class="relative glass-card rounded-xl p-4 text-center transition-all drop-zone cursor-pointer hover:bg-gold/5">
+                        <input type="file" id="slip-upload" accept="image/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" multiple>
+                        <i class="ph ph-upload-simple text-gold text-2xl mb-2"></i>
+                        <p class="text-xs font-medium text-gold">แตะเพื่อแนบสลิปโอนเงิน</p>
+                        <p class="text-[10px] text-slate mt-1">รองรับหลายรูป</p>
+                    </div>
+                    <div id="slip-preview-container" class="hidden grid grid-cols-3 gap-2"></div>
+
+                    <!-- Submit -->
+                    <button type="submit" id="submit-order-btn" class="w-full floating-cta text-white py-4 rounded-xl font-bold transition-all duration-200 shadow-xl text-base">
+                        ยืนยันการสั่งซื้อ
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Order Tracking Section (inline, initially hidden) -->
+        <div id="tracking-section">
+            <div class="px-6 pt-2 pb-8 bg-navy">
+                <div class="gold-divider mb-8"></div>
+                <h2 class="font-heading text-xl font-semibold text-cream mb-6 tracking-wide flex items-center gap-2">
+                    <i class="ph ph-magnifying-glass text-gold"></i> ตรวจสอบสถานะออเดอร์
+                </h2>
+                <div class="flex gap-2 mb-4">
+                    <input type="tel" id="track-phone" placeholder="เบอร์โทรศัพท์ที่ใช้สั่งซื้อ" class="flex-1 p-3.5 rounded-xl luxury-input text-sm">
+                    <button onclick="app.searchOrders()" id="track-search-btn" class="floating-cta text-white px-5 rounded-xl text-sm font-bold active:scale-95 transition-transform flex items-center gap-1.5 whitespace-nowrap">
+                        <i class="ph ph-magnifying-glass"></i> ค้นหา
+                    </button>
+                </div>
+                <div id="tracking-results" class="space-y-3">
+                    <div class="flex flex-col items-center justify-center py-12 text-slate/30">
+                        <i class="ph ph-package text-5xl mb-3"></i>
+                        <p class="text-sm font-medium text-slate/50">ค้นหาด้วยเบอร์โทรศัพท์</p>
+                        <p class="text-[11px] mt-1 text-slate/40">เพื่อดูสถานะออเดอร์ของคุณ</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="px-6 py-10 bg-navy text-center">
+            <div class="gold-divider mb-8"></div>
+            <a href="https://www.facebook.com/PCSHSNSTAlumni" target="_blank" class="inline-flex items-center gap-2 text-slate hover:text-gold transition-colors text-sm">
+                <i class="ph-fill ph-facebook-logo text-xl"></i>
+                <span class="font-medium">แคแสดสัมพันธ์ ครั้งที่ 4 ปี 2569 </span>
+            </a>
+        </footer>
+
+    </div>
+
+    <!-- Success Modal -->
+    <div id="success-modal" class="fixed inset-0 z-[70] hidden items-center justify-center p-6">
+        <div class="absolute inset-0 bg-navy/95 backdrop-blur-xl"></div>
+        <div class="relative glass-card p-10 rounded-2xl shadow-2xl w-full max-w-sm text-center animate-scale-in">
+            <div class="w-20 h-20 rounded-full bg-green-500/10 border border-green-500/30 flex items-center justify-center mx-auto mb-6">
+                <i class="ph-fill ph-check-circle text-5xl text-green-400"></i>
+            </div>
+            <h2 class="text-2xl font-heading font-bold text-cream mb-3">สั่งซื้อสำเร็จ</h2>
+            <p class="text-sm text-slate mb-1">เลขออเดอร์:</p>
+            <span id="order-number" class="font-heading font-bold text-gold text-2xl inline-block mb-2"></span>
+            <p id="payment-status-text" class="text-sm text-amber-400 font-medium">⏳ รอตรวจสอบการชำระเงิน</p>
+            <button onclick="location.reload()" class="w-full floating-cta text-white py-3.5 rounded-xl font-medium mt-8 transition-colors">
+                กลับสู่หน้าหลัก
+            </button>
+        </div>
+    </div>
+
+    <!-- Image Lightbox Modal -->
+    <div id="image-lightbox" class="fixed inset-0 z-[100] hidden flex-col items-center justify-center p-4" onclick="this.classList.add('hidden'); this.classList.remove('flex')">
+        <div class="absolute inset-0 bg-navy/95 backdrop-blur-xl"></div>
+        <button class="absolute top-6 right-6 z-10 w-12 h-12 glass-card text-cream rounded-full flex items-center justify-center">
+            <i class="ph ph-x text-xl"></i>
+        </button>
+        <img id="lightbox-img" src="" alt="Full view" class="relative z-10 max-w-full max-h-[85vh] object-contain rounded-2xl shadow-2xl">
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="fixed inset-0 z-[80] hidden flex-col items-center justify-center bg-navy/95 backdrop-blur-xl">
+        <div class="w-14 h-14 border-2 border-gold/20 border-t-gold rounded-full animate-spin mb-4"></div>
+        <p class="text-cream text-sm font-medium tracking-wider animate-pulse">กำลังประมวลผล...</p>
+    </div>
+
+    <!-- JAVASCRIPT -->
+    <script>
+    (function() {
+        "use strict";
+
+        var API_URL = "https://script.google.com/macros/s/AKfycbzQSyhb314NCKois8dMcamyMiL73Yx2Soyyy75k44F83p21-EWz9lEmpq0T7XQkRNfI7g/exec";
+        var cart = [];
+        var slipBase64Data = [];
+        var storeStatus = 'OPEN';
+        var isAdminMode = new URLSearchParams(window.location.search).get('admin') === 'true';
+        var isCheckoutOpen = false;
+        var isTrackingOpen = false;
+
+        var PRODUCT = {
+            id: 'HANKY',
+            name: 'แคแสดในความทรงจำ | Cassia Memory',
+            price: 200,
+            img: 'image/hanky-hero.jpg'
+        };
+
+        var pageQty = 1;
+        var slideIndex = 0;
+        var slideInterval;
+
+        // Init
+        setupEvents();
+        setupSlipUpload();
+        checkStoreStatus();
+        setupHeaderScroll();
+        updateLivePrice();
+        startSlideshow();
+
+        if (isAdminMode) {
+            document.getElementById('payment-section').classList.add('hidden');
+            document.getElementById('slip-upload-section').classList.add('hidden');
+            document.getElementById('admin-section').classList.remove('hidden');
+        }
+
+        // --- Header scroll effect ---
+        function setupHeaderScroll() {
+            var header = document.getElementById('main-header');
+            window.addEventListener('scroll', function() {
+                if (window.scrollY > 100) {
+                    header.classList.add('bg-navy/95', 'backdrop-blur-xl', 'shadow-lg', 'shadow-navy/50');
+                } else {
+                    header.classList.remove('bg-navy/95', 'backdrop-blur-xl', 'shadow-lg', 'shadow-navy/50');
+                }
+            });
+        }
+
+        // --- Toast ---
+        function showToast(message, type) {
+            type = type || 'error';
+            var container = document.getElementById('toast-container');
+            if (!container) {
+                container = document.createElement('div');
+                container.id = 'toast-container';
+                container.className = 'fixed top-6 left-1/2 -translate-x-1/2 z-[150] flex flex-col gap-3 items-center w-full px-4 pointer-events-none';
+                document.body.appendChild(container);
+            }
+            var toast = document.createElement('div');
+            var bgColor = type === 'success' ? 'bg-green-600' : (type === 'error' ? 'bg-red-500' : 'bg-orange');
+            toast.className = bgColor + ' text-white px-5 py-3.5 rounded-xl shadow-2xl flex items-center gap-3 transform transition-all duration-300 -translate-y-[150%] opacity-0 w-max max-w-[90vw] text-center backdrop-blur-xl';
+            var icon = type === 'success' ? 'ph-check-circle' : 'ph-info';
+            toast.innerHTML = '<i class="ph ' + icon + ' text-xl"></i><span class="font-medium text-sm">' + message + '</span>';
+            container.appendChild(toast);
+            requestAnimationFrame(function() { requestAnimationFrame(function() { toast.classList.remove('-translate-y-[150%]', 'opacity-0'); }); });
+            setTimeout(function() {
+                toast.classList.add('-translate-y-[150%]', 'opacity-0');
+                setTimeout(function() { if(toast.parentNode) toast.parentNode.removeChild(toast); }, 300);
+            }, 3000);
+        }
+
+        // --- Quantity ---
+        function adjustQty(delta) {
+            pageQty += delta;
+            if (pageQty < 1) pageQty = 1;
+            if (pageQty > 99) pageQty = 99;
+            document.getElementById('product-qty').innerText = pageQty;
+            updateLivePrice();
+        }
+
+        function updateLivePrice() {
+            var subtotal = pageQty * PRODUCT.price;
+            var shippingEl = document.querySelector('input[name="shipping-option"]:checked');
+            var isPickup = shippingEl && shippingEl.value === 'pickup';
+            var shipping = isPickup ? 0 : 30;
+
+            if (isAdminMode) { subtotal = 0; shipping = 0; }
+
+            var liveSub = document.getElementById('live-subtotal');
+            var liveShip = document.getElementById('live-shipping');
+            var liveTotal = document.getElementById('live-total');
+            if (liveSub) liveSub.innerText = '฿' + subtotal.toLocaleString();
+            if (liveShip) liveShip.innerText = isPickup ? 'ฟรี' : '฿' + shipping;
+            if (liveTotal) liveTotal.innerText = '฿' + (subtotal + shipping).toLocaleString();
+
+            // Also update checkout prices
+            var coSub = document.getElementById('co-subtotal');
+            var coShip = document.getElementById('co-shipping');
+            var coTotal = document.getElementById('co-total');
+            if (coSub) coSub.innerText = '฿' + subtotal.toLocaleString();
+            if (coShip) coShip.innerText = isPickup ? 'ฟรี' : '฿' + shipping;
+            if (coTotal) coTotal.innerText = '฿' + (subtotal + shipping).toLocaleString();
+        }
+
+        // --- Checkout ---
+        function startCheckout() {
+            // Add to cart internally
+            cart = [{ ...PRODUCT, quantity: pageQty }];
+
+            if (isCheckoutOpen) {
+                // Scroll to checkout section
+                document.getElementById('checkout-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+                return;
+            }
+
+            isCheckoutOpen = true;
+            var section = document.getElementById('checkout-section');
+            section.classList.add('open');
+
+            // Update address visibility
+            updateCheckoutCalculation();
+
+            // Scroll to checkout section
+            setTimeout(function() {
+                section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 100);
+        }
+
+        function updateCheckoutCalculation() {
+            var shippingEl = document.querySelector('input[name="shipping-option"]:checked');
+            var isPickup = shippingEl && shippingEl.value === 'pickup';
+            var addressContainer = document.getElementById('address-container');
+            var addrInput = document.getElementById('cust-address');
+            var pickupDesc = document.getElementById('pickup-desc');
+
+            if (isPickup) {
+                addressContainer.classList.add('hidden');
+                addrInput.removeAttribute('required');
+                if (pickupDesc) pickupDesc.classList.remove('hidden');
+            } else {
+                addressContainer.classList.remove('hidden');
+                addrInput.setAttribute('required', 'required');
+                if (pickupDesc) pickupDesc.classList.add('hidden');
+            }
+            updateLivePrice();
+        }
+
+        // --- Tracking ---
+        function toggleTracking() {
+            var section = document.getElementById('tracking-section');
+            if (isTrackingOpen) {
+                section.classList.remove('open');
+                isTrackingOpen = false;
+            } else {
+                section.classList.add('open');
+                isTrackingOpen = true;
+                setTimeout(function() {
+                    section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    document.getElementById('track-phone').focus();
+                }, 100);
+            }
+        }
+
+        // --- Store Status ---
+        function checkStoreStatus() {
+            if(API_URL === "YOUR_GAS_WEB_APP_URL_HERE") return;
+            fetch(API_URL, {
+                method: 'POST',
+                mode: 'cors',
+                body: JSON.stringify({ action: 'getProducts' })
+            })
+            .then(function(res) { return res.json(); })
+            .then(function(data) {
+                if(data.success && data.storeStatus === 'CLOSED') {
+                    storeStatus = 'CLOSED';
+                    document.getElementById('store-closed-overlay').classList.remove('hidden');
+                }
+            }).catch(console.warn);
+        }
+
+        // --- Setup Events ---
+        function setupEvents() {
+            document.getElementsByName('shipping-option').forEach(function(el) {
+                el.addEventListener('change', updateCheckoutCalculation);
+            });
+            document.getElementById('checkout-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                submitOrder();
+            });
+            document.getElementById('track-phone').addEventListener('keydown', function(e) { if(e.key === 'Enter') { e.preventDefault(); searchOrders(); }});
+        }
+
+        // --- Slip Upload ---
+        function setupSlipUpload() {
+            var fileInput = document.getElementById('slip-upload');
+            var previewContainer = document.getElementById('slip-preview-container');
+            if(!fileInput) return;
+
+            fileInput.addEventListener('change', function(e) {
+                var files = Array.from(e.target.files);
+                if (files.length === 0) return;
+
+                slipBase64Data = [];
+                var processedCount = 0;
+                previewContainer.innerHTML = '<div class="col-span-3 text-center text-xs text-gold py-2"><i class="ph ph-spinner animate-spin"></i> กำลังบีบอัดรูปภาพ...</div>';
+                previewContainer.classList.remove('hidden');
+
+                files.forEach(function(file) {
+                    var reader = new FileReader();
+                    reader.onload = function(evt) {
+                        var img = new Image();
+                        img.onload = function() {
+                            var canvas = document.createElement('canvas');
+                            var ctx = canvas.getContext('2d');
+                            var MAX = 800;
+                            var w = img.width, h = img.height;
+                            if (w > h) { if (w > MAX) { h *= MAX / w; w = MAX; } }
+                            else { if (h > MAX) { w *= MAX / h; h = MAX; } }
+                            canvas.width = w; canvas.height = h;
+                            ctx.drawImage(img, 0, 0, w, h);
+                            slipBase64Data.push(canvas.toDataURL('image/jpeg', 0.6).split(',')[1]);
+                            processedCount++;
+                            if (processedCount === files.length) renderSlipPreviews();
+                        };
+                        img.src = evt.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                });
+            });
+        }
+
+        function renderSlipPreviews() {
+            var container = document.getElementById('slip-preview-container');
+            container.innerHTML = '';
+            slipBase64Data.forEach(function(base64, i) {
+                var div = document.createElement('div');
+                div.className = "relative rounded-xl overflow-hidden border border-gold/20 shadow-sm aspect-[3/4]";
+                div.innerHTML = '<img src="data:image/jpeg;base64,' + base64 + '" class="w-full h-full object-cover"><button type="button" onclick="app.removeSlip(' + i + ')" class="absolute top-1 right-1 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center text-xs shadow-md"><i class="ph ph-x"></i></button>';
+                container.appendChild(div);
+            });
+            container.classList.remove('hidden');
+            var uploadLabel = document.querySelector('#slip-upload-section p');
+            if (uploadLabel) uploadLabel.innerText = 'เลือกแล้ว ' + slipBase64Data.length + ' รูป (แตะเพื่อเปลี่ยน)';
+        }
+
+        function removeSlip(index) {
+            slipBase64Data.splice(index, 1);
+            if(slipBase64Data.length === 0) {
+                document.getElementById('slip-preview-container').classList.add('hidden');
+                var uploadLabel = document.querySelector('#slip-upload-section p');
+                if (uploadLabel) uploadLabel.innerText = 'แตะเพื่อแนบสลิปโอนเงิน';
+            } else {
+                renderSlipPreviews();
+            }
+        }
+
+        // --- Submit Order ---
+        function submitOrder() {
+            var name = document.getElementById('cust-name').value.trim();
+            var phone = document.getElementById('cust-phone').value.trim();
+            var isPickup = document.querySelector('input[name="shipping-option"]:checked').value === 'pickup';
+            var address = isPickup ? '' : document.getElementById('cust-address').value.trim();
+
+            if(!/^0[0-9]{9}$/.test(phone)) {
+                showToast('กรุณากรอกเบอร์โทรศัพท์ 10 หลักให้ถูกต้อง', 'warning');
+                return;
+            }
+            if(!isAdminMode && slipBase64Data.length === 0) {
+                showToast('กรุณาอัปโหลดสลิปโอนเงิน', 'warning');
+                return;
+            }
+
+            document.getElementById('loading-overlay').classList.remove('hidden');
+            document.getElementById('loading-overlay').classList.add('flex');
+
+            var payload = {
+                action: 'createOrder',
+                name: name,
+                phone: phone,
+                deliveryMethod: isPickup ? 'pickup' : 'ship',
+                address: address,
+                quantity: pageQty,
+                slipBase64: slipBase64Data,
+                requestId: Date.now() + '_' + Math.random().toString(36).substr(2,9),
+                isSingleItemMode: true
+            };
+            if(isAdminMode) payload.adminPassword = document.getElementById('admin-pwd').value;
+
+            fetch(API_URL, { method: 'POST', mode: 'cors', body: JSON.stringify(payload) })
+            .then(function(res) { return res.json(); })
+            .then(function(data) {
+                document.getElementById('loading-overlay').classList.add('hidden');
+                document.getElementById('loading-overlay').classList.remove('flex');
+                if(data.success) {
+                    document.getElementById('order-number').innerText = data.orderId;
+                    if(isAdminMode) document.getElementById('payment-status-text').innerText = '✅ สปอนเซอร์ฟรี';
+                    document.getElementById('success-modal').classList.remove('hidden');
+                    document.getElementById('success-modal').classList.add('flex');
+                    cart = [];
+                } else {
+                    showToast(data.message || 'เกิดข้อผิดพลาด กรุณาลองใหม่', 'error');
+                }
+            })
+            .catch(function() {
+                document.getElementById('loading-overlay').classList.add('hidden');
+                document.getElementById('loading-overlay').classList.remove('flex');
+                showToast('ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้', 'error');
+            });
+        }
+
+        // --- Tracking ---
+        function searchOrders() {
+            var phone = document.getElementById('track-phone').value.trim();
+            doSearchOrders(phone, 'tracking-results', 'track-search-btn');
+        }
+        function searchOrdersClosed() {
+            var phone = document.getElementById('closed-track-phone').value.trim();
+            doSearchOrders(phone, 'closed-tracking-results', 'closed-track-btn');
+        }
+
+        function doSearchOrders(phone, resultsId, btnId) {
+            var results = document.getElementById(resultsId);
+            var btn = document.getElementById(btnId);
+            if (!/^0[0-9]{9}$/.test(phone)) {
+                results.innerHTML = '<div class="text-center py-8 text-red-400"><i class="ph ph-warning text-3xl mb-2"></i><p class="text-sm">กรุณากรอกเบอร์โทรศัพท์ 10 หลัก</p></div>';
+                return;
+            }
+            btn.disabled = true;
+            var orgText = btn.innerHTML;
+            btn.innerHTML = '<i class="ph ph-spinner animate-spin"></i>';
+            results.innerHTML = '<div class="flex flex-col items-center justify-center py-12 text-slate/40"><div class="w-10 h-10 border-2 border-gold/20 border-t-gold rounded-full animate-spin mb-3"></div><p class="text-sm text-slate/50">กำลังค้นหา...</p></div>';
+
+            fetch(API_URL, { method: 'POST', mode: 'cors', body: JSON.stringify({ action: 'searchOrders', phone: phone }) })
+            .then(function(res) { return res.json(); })
+            .then(function(data) {
+                if (data.success && data.orders && data.orders.length > 0) {
+                    results.innerHTML = data.orders.map(function(o) { return renderOrderCard(o); }).join('');
+                } else {
+                    results.innerHTML = '<div class="text-center py-8 text-slate/40"><i class="ph ph-package text-5xl mb-3"></i><p class="text-sm font-medium">ไม่พบรายการสั่งซื้อ</p></div>';
+                }
+            })
+            .catch(function() {
+                results.innerHTML = '<div class="text-center py-8 text-red-400"><i class="ph ph-wifi-slash text-4xl mb-2"></i><p class="text-sm">ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้</p></div>';
+            })
+            .finally(function() { btn.disabled = false; btn.innerHTML = orgText; });
+        }
+
+        function renderOrderCard(order) {
+            var statuses = {
+                PAID: { t: 'ชำระแล้ว', cls: 'bg-green-500/20 text-green-400 border-green-500/30', i: 'ph-check-circle' },
+                PENDING: { t: 'รอตรวจสอบ', cls: 'bg-amber-500/20 text-amber-400 border-amber-500/30', i: 'ph-clock' },
+                REJECTED: { t: 'ไม่ผ่าน', cls: 'bg-red-500/20 text-red-400 border-red-500/30', i: 'ph-x-circle' },
+                FULFILLED: { t: 'จัดส่งแล้ว', cls: 'bg-green-500/20 text-green-400 border-green-500/30', i: 'ph-check-circle' },
+                UNFULFILLED: { t: 'รอจัดส่ง', cls: 'bg-amber-500/20 text-amber-400 border-amber-500/30', i: 'ph-clock' },
+                NOT_REQUIRED: { t: 'รับหน้าร้าน', cls: 'bg-blue-500/20 text-blue-400 border-blue-500/30', i: 'ph-storefront' }
+            };
+            var pStat = statuses[order.paymentStatus] || statuses.PENDING;
+            var isPickup = order.deliveryMethod === 'pickup';
+            var fKey = order.fulfillmentStatus || 'UNFULFILLED';
+            if(isPickup && fKey !== 'FULFILLED') fKey = 'NOT_REQUIRED';
+            var fStat = statuses[fKey] || statuses.UNFULFILLED;
+            var trackHTML = order.trackingNumber ? '<div class="mt-3 bg-blue-500/10 px-3 py-2 rounded-lg text-xs text-blue-400 border border-blue-500/20"><i class="ph ph-package mr-1"></i> เลขพัสดุ: ' + order.trackingNumber + '</div>' : '';
+            var dateStr = order.date ? new Date(order.date).toLocaleDateString('th-TH', { year: 'numeric', month: 'short', day: 'numeric'}) : '';
+            var qty = order.quantity || 1;
+
+            return '<div class="glass-card rounded-xl p-5 mb-3">' +
+                '<div class="flex justify-between items-start mb-3">' +
+                    '<div><div class="text-[10px] text-slate/60 uppercase tracking-wider">ออเดอร์</div><div class="font-heading font-bold text-cream">' + order.orderId + '</div></div>' +
+                    '<div class="text-[10px] text-slate/50">' + dateStr + '</div></div>' +
+                '<div class="text-xs text-slate mb-3"><i class="ph ph-shopping-bag text-gold mr-1"></i> แคแสดในความทรงจำ ×' + qty + '</div>' +
+                '<div class="flex items-center justify-between">' +
+                    '<div class="text-gold font-heading font-bold text-lg">฿' + (order.total || 0).toLocaleString() + '</div>' +
+                    '<div class="flex gap-1.5">' +
+                        '<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[9px] font-bold border ' + pStat.cls + '"><i class="ph-fill ' + pStat.i + '"></i> ' + pStat.t + '</span>' +
+                        '<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[9px] font-bold border ' + fStat.cls + '"><i class="ph-fill ' + fStat.i + '"></i> ' + fStat.t + '</span>' +
+                    '</div></div>' + trackHTML + '</div>';
+        }
+
+        // --- Hero Image Change ---
+        function startSlideshow() {
+            clearInterval(slideInterval);
+            slideInterval = setInterval(function() {
+                var thumbs = document.querySelectorAll('.gallery-thumb');
+                if (thumbs.length === 0) return;
+                var nextIndex = (slideIndex + 1) % thumbs.length;
+                var isWrapAround = (nextIndex === 0 && slideIndex === thumbs.length - 1);
+                slideIndex = nextIndex;
+                changeHeroElement(thumbs[slideIndex], isWrapAround);
+            }, 2500);
+        }
+
+        function changeHeroElement(thumbEl, isWrapAround) {
+            var src = thumbEl.querySelector('img').src;
+            var heroImg = document.getElementById('main-hero-img');
+            
+            heroImg.classList.add('opacity-0');
+            setTimeout(function() {
+                heroImg.src = src;
+                heroImg.classList.remove('opacity-0');
+            }, 150);
+
+            document.querySelectorAll('.gallery-thumb').forEach(function(el) { el.classList.remove('active'); });
+            thumbEl.classList.add('active');
+            
+            var scrollBehavior = isWrapAround ? 'auto' : 'smooth';
+            thumbEl.scrollIntoView({ behavior: scrollBehavior, block: 'nearest', inline: 'center' });
+        }
+
+        function changeHero(src, thumbEl) {
+            var thumbs = Array.from(document.querySelectorAll('.gallery-thumb'));
+            slideIndex = thumbs.indexOf(thumbEl);
+            if(slideIndex === -1) slideIndex = 0;
+            
+            changeHeroElement(thumbEl);
+            startSlideshow(); // Reset timer on manual click
+        }
+
+        // --- Global EXPORTS ---
+        window.app = {
+            adjustQty: adjustQty,
+            startCheckout: startCheckout,
+            toggleTracking: toggleTracking,
+            searchOrders: searchOrders,
+            searchOrdersClosed: searchOrdersClosed,
+            removeSlip: removeSlip,
+            changeHero: changeHero,
+            toggleClosedTracking: function() {
+                var section = document.getElementById('closed-tracking-section');
+                var icon = document.getElementById('closed-track-toggle-icon');
+                section.classList.toggle('open');
+                icon.classList.toggle('rotated');
+            },
+            openLightbox: function(src) {
+                var lb = document.getElementById('image-lightbox');
+                document.getElementById('lightbox-img').src = src;
+                lb.classList.remove('hidden');
+                lb.classList.add('flex');
+            }
+        };
+
+    })();
+    </script>
+</body>
+</html>

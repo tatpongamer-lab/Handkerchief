@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin | แคแสดในความทรงจำ | Cassia Memory</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Thai:wght@500;600&family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+    tailwind.config = {
+        theme: {
+            extend: {
+                colors: {
+                    navy: '#1a2634',
+                    cream: '#fdfbf7',
+                    orange: '#e05a00',
+                    charcoal: '#333333',
+                    beige: '#e8e1d5'
+                },
+                fontFamily: {
+                    heading: ['"Noto Serif Thai"', 'serif'],
+                    body: ['"Prompt"', 'sans-serif']
+                }
+            }
+        }
+    }
+    </script>
+    <style>
+        body { font-family: 'Prompt', sans-serif; background-color: #fdfbf7; }
+        .font-heading { font-family: 'Noto Serif Thai', serif; }
+        #view-login { display: flex; }
+        #view-dashboard { display: none; }
+        .content-tab { display: none; }
+        .content-tab.active { display: block; }
+        .nav-link.active { background-color: rgba(255, 255, 255, 0.1); color: #FF6600; }
+        
+        /* Toggle Switch */
+        .toggle-switch { position: relative; display: inline-block; width: 50px; height: 24px; }
+        .toggle-switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 24px; }
+        .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background-color: #FF6600; }
+        input:checked + .slider:before { transform: translateX(26px); }
+
+        /* Loader */
+        .loader { border: 4px solid #f3f3f3; border-top: 4px solid #FF6600; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body class="text-charcoal">
+
+    <!-- LOGIN VIEW -->
+    <section id="view-login" class="min-h-screen items-center justify-center bg-navy px-4">
+        <div class="bg-cream rounded-xl p-8 max-w-md w-full shadow-2xl text-center border border-beige">
+            <i class="ph ph-lock-key text-5xl text-orange mb-4"></i>
+            <h2 class="text-3xl font-heading text-navy mb-2">Admin Portal</h2>
+            <p class="text-sm text-gray-500 mb-6">แคแสดในความทรงจำ | Cassia Memory</p>
+            
+            <form id="loginForm" onsubmit="event.preventDefault(); doLogin();">
+                <input type="password" id="adminPwd" placeholder="รหัสผ่าน" required
+                       class="w-full border border-beige rounded-lg px-4 py-3 mb-4 focus:ring-2 focus:ring-orange outline-none text-center tracking-widest bg-white">
+                <button type="submit" id="loginBtn" class="w-full bg-orange text-white font-medium py-3 rounded-lg hover:bg-orange/90 transition-colors">
+                    เข้าสู่ระบบ
+                </button>
+            </form>
+        </div>
+    </section>
+
+    <!-- DASHBOARD VIEW -->
+    <section id="view-dashboard" class="min-h-screen flex flex-col md:flex-row pb-16 md:pb-0">
+        <!-- Sidebar (Desktop) / Bottom Nav (Mobile) -->
+        <aside class="fixed md:sticky bottom-0 left-0 w-full md:w-64 bg-navy text-cream flex-shrink-0 md:min-h-screen flex flex-row md:flex-col z-50 border-t md:border-t-0 md:border-r border-white/10 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] md:shadow-none">
+            <div class="hidden md:block p-6 border-b border-white/10">
+                <h2 class="text-xl font-heading text-orange">Admin Dashboard</h2>
+                <p class="text-xs text-cream/60 mt-1">แคแสดในความทรงจำ | Cassia Memory</p>
+            </div>
+            <nav class="flex-grow flex md:flex-col justify-around md:justify-start p-2 md:p-4 space-x-2 md:space-x-0 md:space-y-2 w-full">
+                <a href="#" class="nav-link active flex-1 md:flex-none flex flex-col md:flex-row items-center justify-center md:justify-start px-2 py-3 md:px-4 md:py-3 rounded-lg hover:bg-white/5 transition-colors text-cream/80 text-[10px] md:text-base" onclick="switchTab('overview')">
+                    <i class="ph ph-squares-four text-xl md:mr-3 mb-1 md:mb-0"></i> <span>ภาพรวม</span>
+                </a>
+                <a href="#" class="nav-link flex-1 md:flex-none flex flex-col md:flex-row items-center justify-center md:justify-start px-2 py-3 md:px-4 md:py-3 rounded-lg hover:bg-white/5 transition-colors text-cream/80 text-[10px] md:text-base relative" onclick="switchTab('orders')">
+                    <i class="ph ph-receipt text-xl md:mr-3 mb-1 md:mb-0"></i> <span>คำสั่งซื้อ</span>
+                    <span id="navOrderCount" class="absolute top-1 right-1 md:top-auto md:right-4 bg-orange text-white text-[9px] md:text-xs font-bold px-1.5 py-0.5 rounded-full hidden">0</span>
+                </a>
+                <a href="#" class="nav-link flex-1 md:flex-none flex flex-col md:flex-row items-center justify-center md:justify-start px-2 py-3 md:px-4 md:py-3 rounded-lg hover:bg-white/5 transition-colors text-cream/80 text-[10px] md:text-base" onclick="switchTab('settings')">
+                    <i class="ph ph-gear text-xl md:mr-3 mb-1 md:mb-0"></i> <span>ตั้งค่า</span>
+                </a>
+                <div class="hidden md:block mt-auto pt-6 border-t border-white/10">
+                    <a href="#" onclick="doLogout()" class="block px-4 py-3 rounded-lg hover:bg-red-500/20 text-red-400 transition-colors">
+                        <i class="ph ph-sign-out mr-3"></i> ออกจากระบบ
+                    </a>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-grow p-4 md:p-8 overflow-y-auto bg-cream min-h-screen">
+            <div class="flex justify-between items-center mb-6 md:mb-8">
+                <h1 class="text-2xl md:text-3xl font-heading text-navy" id="pageTitle">ภาพรวม</h1>
+                <div class="flex gap-2">
+                    <button onclick="fetchData()" class="bg-white border border-beige shadow-sm px-3 py-2 rounded-lg text-sm hover:bg-gray-50 transition-colors flex items-center gap-2 text-navy">
+                        <i class="ph ph-arrows-clockwise text-lg"></i> <span class="hidden md:inline">รีเฟรช</span>
+                    </button>
+                    <button onclick="doLogout()" class="md:hidden bg-white border border-beige shadow-sm px-3 py-2 rounded-lg text-sm text-red-500 hover:bg-red-50 transition-colors flex items-center gap-2">
+                        <i class="ph ph-sign-out text-lg"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- TAB: OVERVIEW -->
+            <div id="tab-overview" class="content-tab active">
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+                    <div class="bg-navy rounded-xl p-5 shadow-sm text-white">
+                        <div class="flex items-center justify-between mb-3">
+                            <div class="text-sm text-cream/70">ยอดขายรวม</div>
+                            <i class="ph ph-money text-orange text-2xl"></i>
+                        </div>
+                        <div class="text-2xl font-bold" id="statRevenue">฿0</div>
+                    </div>
+                    <div class="bg-navy rounded-xl p-5 shadow-sm text-white">
+                        <div class="flex items-center justify-between mb-3">
+                            <div class="text-sm text-cream/70">จำนวนออเดอร์</div>
+                            <i class="ph ph-shopping-bag text-blue-400 text-2xl"></i>
+                        </div>
+                        <div class="text-2xl font-bold" id="statOrders">0</div>
+                    </div>
+                    <div class="bg-navy rounded-xl p-5 shadow-sm text-white">
+                        <div class="flex items-center justify-between mb-3">
+                            <div class="text-sm text-cream/70">รอตรวจสอบ (Pending)</div>
+                            <i class="ph ph-clock text-yellow-400 text-2xl"></i>
+                        </div>
+                        <div class="text-2xl font-bold" id="statPending">0</div>
+                    </div>
+                    <div class="bg-navy rounded-xl p-5 shadow-sm text-white">
+                        <div class="flex items-center justify-between mb-3">
+                            <div class="text-sm text-cream/70">สถานะร้าน</div>
+                            <i class="ph ph-storefront text-green-400 text-2xl"></i>
+                        </div>
+                        <div class="text-xl font-bold" id="statStoreStatus">กำลังโหลด...</div>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-xl shadow-sm border border-beige p-6 text-center">
+                    <h3 class="text-lg font-medium text-navy mb-2">สรุปสินค้า</h3>
+                    <p class="text-gray-500 mb-4">แคแสดในความทรงจำ | Cassia Memory (฿200)</p>
+                    <div class="text-4xl font-bold text-orange mb-2" id="statTotalItems">0</div>
+                    <p class="text-sm text-gray-400">ชิ้น</p>
+                </div>
+            </div>
+
+            <!-- TAB: ORDERS -->
+            <div id="tab-orders" class="content-tab">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+                    <div class="flex gap-2 overflow-x-auto w-full md:w-auto pb-2 md:pb-0 scrollbar-hide" id="orderFilters">
+                        <button onclick="filterOrders('ALL')" class="filter-btn px-4 py-1.5 rounded-full text-sm whitespace-nowrap bg-navy text-white font-medium">ทั้งหมด</button>
+                        <button onclick="filterOrders('UNFULFILLED')" class="filter-btn px-4 py-1.5 rounded-full text-sm whitespace-nowrap bg-white text-gray-600 border border-beige hover:bg-gray-50">รอจัดส่ง</button>
+                        <button onclick="filterOrders('FULFILLED')" class="filter-btn px-4 py-1.5 rounded-full text-sm whitespace-nowrap bg-white text-gray-600 border border-beige hover:bg-gray-50">จัดส่งแล้ว</button>
+                        <button onclick="filterOrders('PICKED_UP')" class="filter-btn px-4 py-1.5 rounded-full text-sm whitespace-nowrap bg-white text-gray-600 border border-beige hover:bg-gray-50">รับแล้ว</button>
+                    </div>
+                    <div class="flex flex-col sm:flex-row items-center gap-3">
+                        <div class="text-sm text-gray-500 font-medium">
+                            พบ <span id="filteredOrderCount" class="text-navy font-bold">0</span> รายการ
+                        </div>
+                        <button onclick="printSelectedLabels()" class="flex items-center gap-2 bg-orange text-white px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-orange/90 transition-colors shadow-sm">
+                            <i class="ph ph-printer"></i> พิมพ์ใบปะหน้า (A4)
+                        </button>
+                    </div>
+                </div>
+
+                <div class="mb-4 px-2 flex items-center gap-2">
+                    <input type="checkbox" id="selectAllOrders" onchange="toggleSelectAll(this.checked)" class="w-4 h-4 text-orange rounded focus:ring-orange accent-orange cursor-pointer">
+                    <label for="selectAllOrders" class="text-sm text-gray-600 font-medium cursor-pointer">เลือกทั้งหมดบนหน้านี้</label>
+                </div>
+
+                <div id="ordersContainer" class="grid gap-4">
+                    <!-- Orders will be injected here -->
+                </div>
+            </div>
+
+            <!-- TAB: SETTINGS -->
+            <div id="tab-settings" class="content-tab">
+                <div class="max-w-2xl mx-auto space-y-6">
+                    <div class="bg-white rounded-xl shadow-sm border border-beige p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <div>
+                                <h3 class="text-lg font-medium text-navy">สถานะร้านค้า</h3>
+                                <p class="text-sm text-gray-500">เปิด/ปิด การรับออเดอร์หน้าเว็บ</p>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="storeToggleInput" onchange="toggleStoreStatus(this.checked)">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-xl shadow-sm border border-beige p-6">
+                        <h3 class="text-lg font-medium text-navy mb-1">วันที่ตัดรอบ Pre-order</h3>
+                        <p class="text-sm text-gray-500 mb-4">กำหนดวันปิดรับ Pre-order เพื่อแสดงให้ลูกค้าเห็น</p>
+                        <div class="flex gap-2">
+                            <input type="date" id="cutoffDateInput" class="flex-1 border border-beige rounded-lg px-4 py-2 focus:ring-2 focus:ring-orange outline-none">
+                            <button onclick="saveCutoffDate()" class="bg-navy text-white px-4 py-2 rounded-lg hover:bg-navy/90 transition-colors">
+                                บันทึก
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-xl shadow-sm border border-beige p-6">
+                        <h3 class="text-lg font-medium text-navy mb-1">สปอนเซอร์ & เทสออเดอร์</h3>
+                        <p class="text-sm text-gray-500 mb-4">ลิงก์สำหรับสร้างออเดอร์โดยไม่ต้องผ่านหน้าเว็บปกติ</p>
+                        <a href="handkerchief-store.html?admin=true" target="_blank" class="inline-flex items-center gap-2 bg-orange text-white px-4 py-2 rounded-lg hover:bg-orange/90 transition-colors">
+                            <i class="ph ph-gift"></i> สร้างออเดอร์พิเศษ
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </section>
+
+    <!-- ORDER MODAL -->
+    <div id="orderModal" class="fixed inset-0 bg-navy/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col shadow-2xl relative">
+            <button onclick="closeOrderModal()" class="absolute top-4 right-4 text-gray-400 hover:text-orange z-10"><i class="ph ph-x text-2xl"></i></button>
+
+            <!-- Header -->
+            <div class="px-6 py-4 border-b border-beige bg-cream flex justify-between items-center">
+                <div>
+                    <h3 class="text-2xl font-bold text-navy" id="omId">#HANKY-0000</h3>
+                    <div class="text-sm text-gray-500 mt-0.5" id="omDate">วันที่</div>
+                </div>
+                <div class="flex gap-2 mr-10">
+                    <button id="omPrevBtn" onclick="navigateOrder(-1)" class="w-10 h-10 flex items-center justify-center rounded-full bg-white border border-beige text-navy hover:text-orange hover:border-orange disabled:opacity-30 disabled:hover:text-navy disabled:hover:border-beige transition-colors shadow-sm"><i class="ph ph-caret-left text-xl"></i></button>
+                    <button id="omNextBtn" onclick="navigateOrder(1)" class="w-10 h-10 flex items-center justify-center rounded-full bg-white border border-beige text-navy hover:text-orange hover:border-orange disabled:opacity-30 disabled:hover:text-navy disabled:hover:border-beige transition-colors shadow-sm"><i class="ph ph-caret-right text-xl"></i></button>
+                </div>
+            </div>
+
+            <!-- Body -->
+            <div class="p-6 overflow-y-auto flex-grow">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    
+                    <!-- Left Column -->
+                    <div class="space-y-6">
+                        <!-- Customer Info -->
+                        <div>
+                            <h4 class="text-xs uppercase tracking-widest text-charcoal/50 font-bold mb-3 flex items-center gap-1.5"><i class="ph ph-user text-orange text-lg"></i> ข้อมูลลูกค้า</h4>
+                            <div class="bg-gray-50 rounded-xl p-4 space-y-3 border border-beige/50">
+                                <div class="flex items-start gap-3"><div class="text-charcoal/50 w-12 text-sm">ชื่อ</div><div class="font-medium text-navy" id="omName">-</div></div>
+                                <div class="flex items-start gap-3"><div class="text-charcoal/50 w-12 text-sm">เบอร์</div><div class="text-navy" id="omPhone">-</div></div>
+                                <div class="flex items-start gap-3"><div class="text-charcoal/50 w-12 text-sm">รับของ</div><div class="text-navy text-sm" id="omAddress">-</div></div>
+                            </div>
+                        </div>
+
+                        <!-- Order Details -->
+                        <div>
+                            <h4 class="text-xs uppercase tracking-widest text-charcoal/50 font-bold mb-3 flex items-center gap-1.5"><i class="ph ph-shopping-bag text-orange text-lg"></i> รายการสินค้า</h4>
+                            <div class="bg-white rounded-xl border border-beige overflow-hidden">
+                                <div class="p-4 flex items-center justify-between border-b border-beige/50 bg-gray-50/50">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-10 h-10 bg-cream rounded-lg flex items-center justify-center text-orange"><i class="ph ph-gift text-xl"></i></div>
+                                        <div>
+                                            <div class="font-bold text-navy text-sm">แคแสดในความทรงจำ | Cassia Memory</div>
+                                            <div class="text-xs text-charcoal/60">฿200 / ชิ้น</div>
+                                        </div>
+                                    </div>
+                                    <div class="font-bold text-navy">x<span id="omQty">0</span></div>
+                                </div>
+                                <div class="p-4 space-y-2 bg-white">
+                                    <div class="flex justify-between text-sm"><span class="text-charcoal/60">ยอดรวมสินค้า</span><span id="omSubtotal" class="font-medium text-navy">฿0</span></div>
+                                    <div class="flex justify-between text-sm"><span class="text-charcoal/60">ค่าจัดส่ง</span><span id="omShipping" class="font-medium text-navy">฿0</span></div>
+                                    <div class="flex justify-between items-center pt-2 mt-2 border-t border-beige/50"><span class="font-bold text-navy">ยอดสุทธิ</span><span id="omTotal" class="text-lg font-bold text-orange">฿0</span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Column -->
+                    <div class="space-y-6">
+                        <!-- Status -->
+                        <div>
+                            <h4 class="text-xs uppercase tracking-widest text-charcoal/50 font-bold mb-3 flex items-center gap-1.5"><i class="ph ph-tag text-orange text-lg"></i> สถานะ</h4>
+                            <div class="bg-gray-50 rounded-xl p-4 space-y-4 border border-beige/50">
+                                <div class="flex justify-between items-center">
+                                    <span class="text-sm text-charcoal/70">การชำระเงิน</span>
+                                    <select id="omPaySelect" onchange="handlePayChange(this.value)" class="text-sm font-bold rounded-lg px-3 py-1.5 outline-none cursor-pointer border border-transparent focus:border-orange appearance-none text-center min-w-[120px] bg-no-repeat bg-[url('data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'2\' stroke-linecap=\'round\' stroke-linejoin=\'round\'><polyline points=\'6 9 12 15 18 9\'></polyline></svg>')] bg-[length:16px] bg-[position:right_8px_center] pr-8">
+                                        <option value="PENDING" class="text-navy">รอชำระเงิน</option>
+                                        <option value="PAID" class="text-navy">ชำระแล้ว</option>
+                                        <option value="REJECTED" class="text-navy">ปฏิเสธ (สลิปไม่ผ่าน)</option>
+                                    </select>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <span class="text-sm text-charcoal/70">การจัดส่ง</span>
+                                    <select id="omFulSelect" onchange="handleFulChange(this.value)" class="text-sm font-bold rounded-lg px-3 py-1.5 outline-none cursor-pointer border border-transparent focus:border-orange appearance-none text-center min-w-[120px] bg-no-repeat bg-[url('data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'2\' stroke-linecap=\'round\' stroke-linejoin=\'round\'><polyline points=\'6 9 12 15 18 9\'></polyline></svg>')] bg-[length:16px] bg-[position:right_8px_center] pr-8">
+                                        <option value="UNFULFILLED" class="text-navy">รอจัดส่ง / รอรับ</option>
+                                        <option value="FULFILLED" class="text-navy">จัดส่งแล้ว</option>
+                                        <option value="PICKED_UP" class="text-navy">รับของแล้ว</option>
+                                    </select>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <span class="text-sm text-charcoal/70">พัสดุ</span>
+                                    <div class="flex items-center gap-2">
+                                        <span class="text-sm font-bold text-navy" id="omTracking">-</span>
+                                        <button onclick="editTracking()" class="text-gray-400 hover:text-orange p-1 rounded hover:bg-gray-200 transition-colors"><i class="ph ph-pencil-simple text-base"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Slip Section -->
+                        <div>
+                            <h4 class="text-xs uppercase tracking-widest text-charcoal/50 font-bold mb-3 flex items-center gap-1.5"><i class="ph ph-image text-orange text-lg"></i> สลิปโอนเงิน</h4>
+                            <div id="omSlipContainer" class="bg-gray-50 rounded-xl p-3 border border-beige/50 text-center flex items-center justify-center min-h-[120px]">
+                                <!-- Render slip button or img here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- LOADING OVERLAY -->
+    <div id="loadingOverlay" class="fixed inset-0 bg-navy/50 backdrop-blur-sm z-[100] hidden items-center justify-center flex-col">
+        <div class="loader mb-4"></div>
+        <div class="text-white font-medium" id="loadingText">กำลังโหลดข้อมูล...</div>
+    </div>
+
+    <!-- JAVASCRIPT -->
+    <script>
+        var API_URL = "https://script.google.com/macros/s/AKfycbzQSyhb314NCKois8dMcamyMiL73Yx2Soyyy75k44F83p21-EWz9lEmpq0T7XQkRNfI7g/exec";
+        var password = "";
+        var allData = { orders: [], storeStatus: 'CLOSED', cutoffDate: '' };
+        var currentFilter = 'ALL';
+        var currentFilteredOrders = [];
+        var currentViewedIndex = -1;
+
+        // SweetAlert2 Toast configuration
+        const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true
+        });
+
+        function showLoading(text = 'กำลังโหลด...') {
+            document.getElementById('loadingText').innerText = text;
+            document.getElementById('loadingOverlay').style.display = 'flex';
+        }
+
+        function hideLoading() {
+            document.getElementById('loadingOverlay').style.display = 'none';
+        }
+
+        // --- API Helper ---
+        async function callAPI(payload) {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 15000); // 15 seconds timeout
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    body: JSON.stringify(payload),
+                    signal: controller.signal
+                });
+                
+                clearTimeout(timeoutId);
+                const result = await response.json();
+                if (!result.success) throw new Error(result.message || result.error || 'Unknown error');
+                return result;
+            } catch (error) {
+                clearTimeout(timeoutId);
+                if (error.name === 'AbortError') {
+                    console.error("API Error: Request timed out");
+                    throw new Error('ระบบใช้เวลาตอบสนองนานเกินไป โปรดลองใหม่อีกครั้ง');
+                }
+                console.error("API Error:", error);
+                throw error;
+            }
+        }
+
+        // --- Auth ---
+        async function doLogin() {
+            const pwd = document.getElementById('adminPwd').value;
+            if (!pwd) return;
+            
+            showLoading('กำลังตรวจสอบรหัสผ่าน...');
+            try {
+                // If API_URL is placeholder, bypass for demo if requested or show alert
+                if (API_URL === "YOUR_GAS_WEB_APP_URL_HERE") {
+                    hideLoading();
+                    Swal.fire('แจ้งเตือน', 'กรุณาใส่ API_URL ของ Google Apps Script ก่อนใช้งานจริง', 'info');
+                    return;
+                }
+
+                const res = await callAPI({ action: 'getAdminData', password: pwd });
+                password = pwd; // Save password
+                document.getElementById('view-login').style.display = 'none';
+                document.getElementById('view-dashboard').style.display = 'flex';
+                
+                processData(res);
+                hideLoading();
+                Toast.fire({ icon: 'success', title: 'เข้าสู่ระบบสำเร็จ' });
+            } catch (err) {
+                hideLoading();
+                Swal.fire('เข้าสู่ระบบล้มเหลว', err.message, 'error');
+            }
+        }
+
+        function doLogout() {
+            password = "";
+            window.location.reload();
+        }
+
+        // --- Data & UI ---
+        async function fetchData() {
+            if (!password) return;
+            showLoading('กำลังรีเฟรชข้อมูล...');
+            try {
+                const res = await callAPI({ action: 'getAdminData', password: password });
+                processData(res);
+                hideLoading();
+                Toast.fire({ icon: 'success', title: 'รีเฟรชข้อมูลแล้ว' });
+            } catch (err) {
+                hideLoading();
+                Swal.fire('เกิดข้อผิดพลาด', err.message, 'error');
+            }
+        }
+
+        function processData(data) {
+            allData = data;
+            
+            // Update Overview
+            let totalRevenue = 0;
+            let pendingCount = 0;
+            let totalItems = 0;
+
+            const orders = data.orders || [];
+            
+            orders.forEach(o => {
+                if (o.paymentStatus === 'PAID') totalRevenue += Number(o.total || 0);
+                if (o.paymentStatus === 'PENDING') pendingCount++;
+                if (o.paymentStatus !== 'REJECTED') {
+                    totalItems += Number(o.quantity || 1); // Assuming 1 item per order if not specified
+                }
+            });
+
+            document.getElementById('statRevenue').innerText = `฿${totalRevenue.toLocaleString()}`;
+            document.getElementById('statOrders').innerText = orders.length;
+            document.getElementById('statPending').innerText = pendingCount;
+            document.getElementById('statTotalItems').innerText = totalItems;
+            
+            document.getElementById('navOrderCount').innerText = pendingCount;
+            if(pendingCount > 0) {
+                document.getElementById('navOrderCount').classList.remove('hidden');
+            } else {
+                document.getElementById('navOrderCount').classList.add('hidden');
+            }
+
+            // Store status
+            const sStatus = data.storeStatus || 'CLOSED';
+            document.getElementById('statStoreStatus').innerText = sStatus === 'OPEN' ? 'เปิดรับออเดอร์' : 'ปิดร้าน';
+            document.getElementById('statStoreStatus').className = `text-xl font-bold ${sStatus === 'OPEN' ? 'text-green-400' : 'text-red-400'}`;
+            document.getElementById('storeToggleInput').checked = (sStatus === 'OPEN');
+
+            // Cutoff date
+            if(data.cutoffDate) {
+                document.getElementById('cutoffDateInput').value = data.cutoffDate;
+            }
+
+            renderOrders();
+        }
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.content-tab').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.nav-link').forEach(el => el.classList.remove('active', 'bg-white/10', 'text-orange'));
+            
+            document.getElementById(`tab-${tabId}`).classList.add('active');
+            
+            // Highlight nav
+            const eventTarget = event.currentTarget;
+            if (eventTarget) {
+                document.querySelectorAll('.nav-link').forEach(el => {
+                    el.classList.add('text-cream/80');
+                    el.classList.remove('active');
+                });
+                eventTarget.classList.add('active');
+                eventTarget.classList.remove('text-cream/80');
+            }
+            
+            const titles = { 'overview': 'ภาพรวม', 'orders': 'รายการคำสั่งซื้อ', 'settings': 'ตั้งค่าระบบ' };
+            document.getElementById('pageTitle').innerText = titles[tabId];
+        }
+
+        // --- Orders ---
+        function filterOrders(status) {
+            currentFilter = status;
+            
+            // Update buttons
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.className = "filter-btn px-4 py-1.5 rounded-full text-sm whitespace-nowrap bg-white text-gray-600 border border-beige hover:bg-gray-50 transition-colors";
+            });
+            event.target.className = "filter-btn px-4 py-1.5 rounded-full text-sm whitespace-nowrap bg-navy text-white font-medium transition-colors";
+            
+            renderOrders();
+        }
+
+        function renderOrders() {
+            const container = document.getElementById('ordersContainer');
+            container.innerHTML = '';
+            
+            let orders = allData.orders || [];
+            
+            // Apply filter
+            if (currentFilter !== 'ALL') {
+                orders = orders.filter(o => o.fulfillmentStatus === currentFilter);
+            }
+
+            // Sort newest first (assuming orderId contains timestamp or sequential)
+            orders.sort((a, b) => String(b.orderId).localeCompare(String(a.orderId)));
+            currentFilteredOrders = orders;
+
+            document.getElementById('selectAllOrders').checked = false;
+
+            document.getElementById('filteredOrderCount').innerText = orders.length;
+
+            if (orders.length === 0) {
+                container.innerHTML = `<div class="text-center py-10 bg-white rounded-xl border border-beige"><i class="ph ph-receipt text-4xl text-gray-300 mb-2"></i><p class="text-gray-500">ไม่มีรายการคำสั่งซื้อ</p></div>`;
+                return;
+            }
+
+            orders.forEach((order, index) => {
+                const isPickup = order.deliveryMethod === 'pickup';
+                
+                // Badges
+                const payBadge = getPaymentBadge(order.paymentStatus);
+                const fulBadge = getFulfillmentBadge(order.fulfillmentStatus);
+                const delBadge = isPickup ? 
+                    `<span class="inline-flex items-center gap-1 bg-purple-100 text-purple-700 text-xs px-2 py-1 rounded font-medium"><i class="ph ph-storefront"></i> รับหน้างาน</span>` : 
+                    `<span class="inline-flex items-center gap-1 bg-blue-100 text-blue-700 text-xs px-2 py-1 rounded font-medium"><i class="ph ph-truck"></i> จัดส่ง</span>`;
+
+                const html = `
+                    <div class="bg-white rounded-xl p-5 border border-beige shadow-sm flex flex-col md:flex-row gap-4 relative group">
+                        <div class="absolute top-5 right-5 md:top-auto md:right-auto md:left-5 md:mt-1 z-10">
+                            <input type="checkbox" class="order-checkbox w-5 h-5 text-orange rounded focus:ring-orange accent-orange cursor-pointer" value="${index}">
+                        </div>
+                        <div class="flex-grow md:pl-10">
+                            <div class="flex flex-wrap items-center gap-2 mb-2 pr-8 md:pr-0">
+                                <span class="font-bold text-navy text-lg">#${order.orderId}</span>
+                                ${payBadge}
+                                ${fulBadge}
+                                ${delBadge}
+                            </div>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-y-2 gap-x-4 text-sm text-gray-600 mb-4">
+                                <div><i class="ph ph-user mr-1 text-gray-400"></i> <span class="font-medium text-charcoal">${order.customerName}</span></div>
+                                <div><i class="ph ph-phone mr-1 text-gray-400"></i> ${order.phone}</div>
+                                <div><i class="ph ph-stack mr-1 text-gray-400"></i> จำนวน: <span class="font-medium text-charcoal">${order.quantity} ชิ้น</span></div>
+                                <div><i class="ph ph-money mr-1 text-gray-400"></i> ยอดรวม: <span class="font-bold text-orange">฿${order.total}</span></div>
+                                ${order.trackingNumber ? `<div class="col-span-1 md:col-span-2 text-blue-600"><i class="ph ph-package mr-1"></i> Tracking: ${order.trackingNumber}</div>` : ''}
+                            </div>
+                        </div>
+                        
+                        <div class="flex flex-row md:flex-col gap-2 min-w-[150px] border-t md:border-t-0 md:border-l border-beige pt-4 md:pt-0 md:pl-4 justify-center">
+                            <button onclick="openOrderModal(${index})" class="flex-1 md:flex-none text-center bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-bold py-2 px-3 rounded transition-colors w-full h-full"><i class="ph ph-list-magnifying-glass"></i> ดูรายละเอียดออเดอร์</button>
+                        </div>
+                    </div>
+                `;
+                container.insertAdjacentHTML('beforeend', html);
+            });
+
+            // If modal is open, try to update it
+            if (currentViewedOrderId) {
+                const newIndex = currentFilteredOrders.findIndex(o => o.orderId === currentViewedOrderId);
+                if (newIndex !== -1) {
+                    openOrderModal(newIndex);
+                } else {
+                    closeOrderModal();
+                }
+            }
+        }
+
+        function getPaymentBadge(status) {
+            const map = {
+                'PENDING': { class: 'bg-yellow-100 text-yellow-800', text: 'รอชำระเงิน' },
+                'PAID': { class: 'bg-green-100 text-green-800', text: 'ชำระแล้ว' },
+                'REJECTED': { class: 'bg-red-100 text-red-800', text: 'ปฏิเสธ/ไม่ผ่าน' }
+            };
+            const s = map[status] || { class: 'bg-gray-100 text-gray-800', text: status };
+            return `<span class="${s.class} text-[10px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wider">${s.text}</span>`;
+        }
+
+        function getFulfillmentBadge(status) {
+            const map = {
+                'UNFULFILLED': { class: 'bg-gray-100 text-gray-600', text: 'รอจัดส่ง' },
+                'FULFILLED': { class: 'bg-blue-100 text-blue-700', text: 'จัดส่งแล้ว' },
+                'PICKED_UP': { class: 'bg-purple-100 text-purple-700', text: 'รับแล้ว' }
+            };
+            const s = map[status] || { class: 'bg-gray-100 text-gray-800', text: status };
+            return `<span class="${s.class} text-[10px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wider">${s.text}</span>`;
+        }
+
+        // --- Order Modal Logic ---
+        var currentViewedOrderId = null;
+
+        function openOrderModal(index) {
+            if (index < 0 || index >= currentFilteredOrders.length) return;
+            
+            const order = currentFilteredOrders[index];
+            currentViewedIndex = index;
+            currentViewedOrderId = order.orderId;
+            
+            // Populate data
+            document.getElementById('omId').innerText = `#${order.orderId}`;
+            const d = new Date(order.createdAt);
+            document.getElementById('omDate').innerText = isNaN(d.getTime()) ? order.createdAt : d.toLocaleString('th-TH');
+            
+            document.getElementById('omName').innerText = order.customerName;
+            document.getElementById('omPhone').innerText = order.phone;
+            document.getElementById('omAddress').innerText = order.deliveryMethod === 'pickup' ? 'รับหน้าร้าน (สุมาดีเภสัช)' : order.address;
+            
+            const paySel = document.getElementById('omPaySelect');
+            paySel.value = order.paymentStatus;
+            updateSelectStyle(paySel, order.paymentStatus);
+
+            const fulSel = document.getElementById('omFulSelect');
+            fulSel.value = order.fulfillmentStatus;
+            // Hide "FULFILLED" for pickup
+            if (order.deliveryMethod === 'pickup') {
+                fulSel.querySelector('option[value="FULFILLED"]').style.display = 'none';
+            } else {
+                fulSel.querySelector('option[value="FULFILLED"]').style.display = 'block';
+            }
+            updateSelectStyle(fulSel, order.fulfillmentStatus);
+
+            document.getElementById('omTracking').innerText = order.trackingNumber || '-';
+            
+            document.getElementById('omQty').innerText = order.quantity;
+            document.getElementById('omSubtotal').innerText = `฿${order.subtotal || (order.quantity*200)}`;
+            document.getElementById('omShipping').innerText = `฿${order.shippingFee || (order.deliveryMethod === 'pickup'?0:30)}`;
+            document.getElementById('omTotal').innerText = `฿${order.total}`;
+            
+            const slipContainer = document.getElementById('omSlipContainer');
+            if (order.slipUrl) {
+                slipContainer.innerHTML = `<a href="${order.slipUrl}" target="_blank"><img src="${order.slipUrl}" class="max-h-40 object-contain mx-auto rounded-lg shadow-sm border border-beige hover:opacity-90 transition-opacity cursor-pointer"></a>`;
+            } else {
+                slipContainer.innerHTML = `<div class="py-4 text-gray-400"><i class="ph ph-image-broken text-3xl mb-2 flex justify-center"></i><br><span class="text-xs">ไม่มีรูปสลิป</span></div>`;
+            }
+            
+            // Buttons state
+            document.getElementById('omPrevBtn').disabled = (index === 0);
+            document.getElementById('omNextBtn').disabled = (index === currentFilteredOrders.length - 1);
+            
+            // Show modal
+            document.getElementById('orderModal').classList.remove('hidden');
+        }
+
+        function closeOrderModal() {
+            document.getElementById('orderModal').classList.add('hidden');
+            currentViewedOrderId = null;
+        }
+
+        function navigateOrder(dir) {
+            const newIndex = currentViewedIndex + dir;
+            openOrderModal(newIndex);
+        }
+
+        // --- Print Logic ---
+        function toggleSelectAll(checked) {
+            const checkboxes = document.querySelectorAll('.order-checkbox');
+            checkboxes.forEach(cb => {
+                cb.checked = checked;
+            });
+        }
+
+        function printSelectedLabels() {
+            const checkboxes = document.querySelectorAll('.order-checkbox:checked');
+            if (checkboxes.length === 0) {
+                Swal.fire('ไม่มีรายการ', 'กรุณาเลือกออเดอร์ที่ต้องการพิมพ์', 'warning');
+                return;
+            }
+
+            const selectedOrders = [];
+            checkboxes.forEach(cb => {
+                const index = parseInt(cb.value);
+                const order = currentFilteredOrders[index];
+                if (order) {
+                    selectedOrders.push(order);
+                }
+            });
+
+            if (selectedOrders.length === 0) {
+                Swal.fire('ไม่มีรายการจัดส่ง', 'ไม่พบออเดอร์', 'warning');
+                return;
+            }
+
+            // Generate Print HTML
+            const win = window.open('', '_blank');
+            
+            let html = `<!DOCTYPE html><html><head><title>พิมพ์ใบปะหน้า</title>
+                <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;700&display=swap" rel="stylesheet">
+                <style>
+                body { font-family: 'Sarabun', sans-serif; margin: 0; padding: 0; box-sizing: border-box; background: #eee; }
+                .page { width: 210mm; min-height: 297mm; padding: 10mm; margin: 10mm auto; box-sizing: border-box; background: white; page-break-after: always; display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: repeat(4, 1fr); gap: 5mm; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+                .label { border: 1px dashed #aaa; padding: 0; box-sizing: border-box; overflow: hidden; display: flex; flex-direction: column; position: relative; }
+                .label-body { padding: 6mm; flex-grow: 1; display: flex; flex-direction: column; }
+                .header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 1px solid #ddd; padding-bottom: 5px; margin-bottom: 10px; }
+                .sender { font-size: 9pt; color: #555; line-height: 1.2; }
+                .brand { font-size: 14pt; font-weight: bold; color: #000; text-align: right; line-height: 1.1; }
+                .receiver-title { font-weight: bold; font-size: 11pt; margin-bottom: 5px; color: #000; }
+                .receiver { font-size: 14pt; line-height: 1.4; flex-grow: 1; font-weight: 500; color: #000; }
+                .pickup-badge { font-size: 14pt; font-weight: bold; color: #000; padding: 6px 12px; border: 3px solid #000; border-radius: 6px; display: inline-block; margin-top: 8px; }
+                .order-info { background: #f5f5f5; padding: 4mm 6mm; border-top: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }
+                .order-id { font-weight: bold; font-size: 12pt; color: #333; }
+                .item-qty { font-weight: bold; font-size: 16pt; color: #000; }
+                @media print {
+                    body { background: white; margin: 0; padding: 0; }
+                    @page { size: A4 portrait; margin: 0; }
+                    .page { margin: 0; padding: 10mm; border: none; box-shadow: none; width: 100%; height: 100%; }
+                }
+                </style></head><body>`;
+            
+            let labelCount = 0;
+            let pageStarted = false;
+            
+            selectedOrders.forEach(order => {
+                if (labelCount % 8 === 0) {
+                    if (pageStarted) html += `</div>`;
+                    html += `<div class="page">`;
+                    pageStarted = true;
+                }
+                
+                let addressHtml = '';
+                if (order.deliveryMethod === 'pickup') {
+                    addressHtml = `<div class="pickup-badge">รับหน้าร้าน (สุมาดีเภสัช)</div>`;
+                } else {
+                    addressHtml = `${order.address}<br><b>โทร: ${order.phone}</b>`;
+                }
+
+                html += `
+                    <div class="label">
+                        <div class="label-body">
+                            <div class="header">
+                                <div class="sender">
+                                    <b>ผู้ส่ง:</b> สุมาดี รุจิ<br>
+                                    สุมาดีเภสัช 41/6 ถ.ศรีธรรมโศก<br>
+                                    ต.ในเมือง อ.เมือง จ.นครศรีฯ 80000<br>
+                                    โทร: 062-997-9695
+                                </div>
+                                <div class="brand">แคแสดในความทรงจำ | Cassia Memory</div>
+                            </div>
+                            <div class="receiver-title">ผู้รับ:</div>
+                            <div class="receiver">
+                                <b style="font-size: 16pt;">${order.customerName}</b><br>
+                                ${addressHtml}
+                            </div>
+                        </div>
+                        <div class="order-info">
+                            <span class="order-id">#${order.orderId}</span>
+                            <span>จำนวน: <span class="item-qty">${order.quantity}</span> ชิ้น</span>
+                        </div>
+                    </div>
+                `;
+                labelCount++;
+            });
+            
+            if (pageStarted) html += `</div>`;
+            html += `<script>window.onload = function() { setTimeout(function(){ window.print(); }, 500); }<\/script></body></html>`;
+            
+            win.document.write(html);
+            win.document.close();
+        }
+
+        // --- Actions ---
+        function updateSelectStyle(selectEl, status) {
+            selectEl.className = selectEl.className.replace(/bg-\w+-\d+/g, '').replace(/text-\w+-\d+/g, '');
+            if (status === 'PENDING') selectEl.classList.add('bg-yellow-100', 'text-yellow-800');
+            else if (status === 'PAID') selectEl.classList.add('bg-green-100', 'text-green-800');
+            else if (status === 'REJECTED') selectEl.classList.add('bg-red-100', 'text-red-800');
+            else if (status === 'UNFULFILLED') selectEl.classList.add('bg-gray-200', 'text-gray-700');
+            else if (status === 'FULFILLED') selectEl.classList.add('bg-blue-100', 'text-blue-700');
+            else if (status === 'PICKED_UP') selectEl.classList.add('bg-purple-100', 'text-purple-700');
+        }
+
+        async function handlePayChange(status) {
+            if (!currentViewedOrderId) return;
+            const orderId = currentViewedOrderId;
+            updateOrder(orderId, { paymentStatus: status });
+        }
+
+        async function handleFulChange(status) {
+            if (!currentViewedOrderId) return;
+            const orderId = currentViewedOrderId;
+            
+            if (status === 'FULFILLED') {
+                const { value: trackNum } = await Swal.fire({
+                    title: 'จัดส่งแล้ว',
+                    input: 'text',
+                    inputLabel: 'กรุณากรอก Tracking Number (ถ้ามี)',
+                    inputPlaceholder: 'TH123456...',
+                    showCancelButton: true,
+                    confirmButtonText: 'บันทึก',
+                    cancelButtonText: 'ข้าม',
+                    confirmButtonColor: '#FF6600',
+                });
+                // Even if cancelled/skipped, we save the status. trackNum will be undefined if cancelled.
+                updateOrder(orderId, { 
+                    fulfillmentStatus: status, 
+                    trackingNumber: (trackNum !== undefined) ? trackNum : '' 
+                });
+            } else {
+                updateOrder(orderId, { fulfillmentStatus: status });
+            }
+        }
+
+        async function editTracking() {
+            if (!currentViewedOrderId) return;
+            const orderId = currentViewedOrderId;
+            const order = currentFilteredOrders.find(o => o.orderId === orderId);
+            
+            const { value: trackNum } = await Swal.fire({
+                title: 'แก้ไข Tracking Number',
+                input: 'text',
+                inputValue: order.trackingNumber || '',
+                inputPlaceholder: 'TH123456...',
+                showCancelButton: true,
+                confirmButtonText: 'บันทึก',
+                cancelButtonText: 'ยกเลิก',
+                confirmButtonColor: '#FF6600',
+            });
+            
+            if (trackNum !== undefined && trackNum !== (order.trackingNumber || '')) {
+                updateOrder(orderId, { trackingNumber: trackNum });
+            }
+        }
+
+        async function updateOrder(orderId, updates) {
+            showLoading('กำลังอัปเดต...');
+            try {
+                const payload = { action: 'updateOrderStatus', password, orderId, ...updates };
+                await callAPI(payload);
+                
+                // Update local data
+                const idx = allData.orders.findIndex(o => o.orderId === orderId);
+                if (idx > -1) {
+                    allData.orders[idx] = { ...allData.orders[idx], ...updates };
+                }
+                
+                processData(allData); // Re-render
+                hideLoading();
+                Toast.fire({ icon: 'success', title: 'อัปเดตสำเร็จ' });
+            } catch (err) {
+                hideLoading();
+                Swal.fire('ข้อผิดพลาด', err.message, 'error');
+            }
+        }
+
+        async function toggleStoreStatus(isOpen) {
+            const status = isOpen ? 'OPEN' : 'CLOSED';
+            const actionText = isOpen ? 'เปิดรับออเดอร์' : 'ปิดรับออเดอร์';
+            
+            const result = await Swal.fire({
+                title: `ยืนยัน${actionText}?`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#1E2A38',
+                confirmButtonText: 'ยืนยัน',
+                cancelButtonText: 'ยกเลิก'
+            });
+
+            if (result.isConfirmed) {
+                showLoading('กำลังบันทึก...');
+                try {
+                    await callAPI({ action: 'toggleStore', password, status });
+                    allData.storeStatus = status;
+                    processData(allData);
+                    hideLoading();
+                    Toast.fire({ icon: 'success', title: `ร้าน${isOpen ? 'เปิด' : 'ปิด'}แล้ว` });
+                } catch (err) {
+                    hideLoading();
+                    document.getElementById('storeToggleInput').checked = !isOpen; // Revert
+                    Swal.fire('ข้อผิดพลาด', err.message, 'error');
+                }
+            } else {
+                document.getElementById('storeToggleInput').checked = !isOpen; // Revert
+            }
+        }
+
+        async function saveCutoffDate() {
+            const date = document.getElementById('cutoffDateInput').value;
+            showLoading('กำลังบันทึก...');
+            try {
+                await callAPI({ action: 'setPreorderCutoff', password, cutoffDate: date });
+                allData.cutoffDate = date;
+                hideLoading();
+                Toast.fire({ icon: 'success', title: 'บันทึกวันตัดรอบสำเร็จ' });
+            } catch (err) {
+                hideLoading();
+                Swal.fire('ข้อผิดพลาด', err.message, 'error');
+            }
+        }
+
+    </script>
+</body>
+</html>
