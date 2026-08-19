@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin | แคแสดในความทรงจำ | Cassia Memory</title>
+    <title>Admin | ลายฝันวันวาน | DREAMS OF YESTERDAY</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Thai:wght@500;600&family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
@@ -56,7 +56,7 @@
         <div class="bg-cream rounded-xl p-8 max-w-md w-full shadow-2xl text-center border border-beige">
             <i class="ph ph-lock-key text-5xl text-orange mb-4"></i>
             <h2 class="text-3xl font-heading text-navy mb-2">Admin Portal</h2>
-            <p class="text-sm text-gray-500 mb-6">แคแสดในความทรงจำ | Cassia Memory</p>
+            <p class="text-sm text-gray-500 mb-6">ลายฝันวันวาน | DREAMS OF YESTERDAY</p>
             
             <form id="loginForm" onsubmit="event.preventDefault(); doLogin();">
                 <input type="password" id="adminPwd" placeholder="รหัสผ่าน" required
@@ -74,7 +74,7 @@
         <aside class="fixed md:sticky bottom-0 left-0 w-full md:w-64 bg-navy text-cream flex-shrink-0 md:min-h-screen flex flex-row md:flex-col z-50 border-t md:border-t-0 md:border-r border-white/10 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] md:shadow-none">
             <div class="hidden md:block p-6 border-b border-white/10">
                 <h2 class="text-xl font-heading text-orange">Admin Dashboard</h2>
-                <p class="text-xs text-cream/60 mt-1">แคแสดในความทรงจำ | Cassia Memory</p>
+                <p class="text-xs text-cream/60 mt-1">ลายฝันวันวาน | DREAMS OF YESTERDAY</p>
             </div>
             <nav class="flex-grow flex md:flex-col justify-around md:justify-start p-2 md:p-4 space-x-2 md:space-x-0 md:space-y-2 w-full">
                 <a href="#" class="nav-link active flex-1 md:flex-none flex flex-col md:flex-row items-center justify-center md:justify-start px-2 py-3 md:px-4 md:py-3 rounded-lg hover:bg-white/5 transition-colors text-cream/80 text-[10px] md:text-base" onclick="switchTab('overview')">
@@ -111,13 +111,20 @@
 
             <!-- TAB: OVERVIEW -->
             <div id="tab-overview" class="content-tab active">
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-                    <div class="bg-navy rounded-xl p-5 shadow-sm text-white">
+                <div class="grid grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
+                    <div class="bg-navy rounded-xl p-5 shadow-sm text-white border-b-4 border-orange">
                         <div class="flex items-center justify-between mb-3">
-                            <div class="text-sm text-cream/70">ยอดขายรวม</div>
+                            <div class="text-sm text-cream/70">ยอดสินค้า</div>
                             <i class="ph ph-money text-orange text-2xl"></i>
                         </div>
-                        <div class="text-2xl font-bold" id="statRevenue">฿0</div>
+                        <div class="text-2xl font-bold" id="statProduct">฿0</div>
+                    </div>
+                    <div class="bg-navy rounded-xl p-5 shadow-sm text-white border-b-4 border-blue-400">
+                        <div class="flex items-center justify-between mb-3">
+                            <div class="text-sm text-cream/70">ค่าจัดส่ง</div>
+                            <i class="ph ph-truck text-blue-400 text-2xl"></i>
+                        </div>
+                        <div class="text-2xl font-bold" id="statShipping">฿0</div>
                     </div>
                     <div class="bg-navy rounded-xl p-5 shadow-sm text-white">
                         <div class="flex items-center justify-between mb-3">
@@ -144,7 +151,7 @@
                 
                 <div class="bg-white rounded-xl shadow-sm border border-beige p-6 text-center">
                     <h3 class="text-lg font-medium text-navy mb-2">สรุปสินค้า</h3>
-                    <p class="text-gray-500 mb-4">แคแสดในความทรงจำ | Cassia Memory (฿200)</p>
+                    <p class="text-gray-500 mb-4">ลายฝันวันวาน | DREAMS OF YESTERDAY (฿200)</p>
                     <div class="text-4xl font-bold text-orange mb-2" id="statTotalItems">0</div>
                     <p class="text-sm text-gray-400">ชิ้น</p>
                 </div>
@@ -155,9 +162,9 @@
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
                     <div class="flex gap-2 overflow-x-auto w-full md:w-auto pb-2 md:pb-0 scrollbar-hide" id="orderFilters">
                         <button onclick="filterOrders('ALL')" class="filter-btn px-4 py-1.5 rounded-full text-sm whitespace-nowrap bg-navy text-white font-medium">ทั้งหมด</button>
-                        <button onclick="filterOrders('UNFULFILLED')" class="filter-btn px-4 py-1.5 rounded-full text-sm whitespace-nowrap bg-white text-gray-600 border border-beige hover:bg-gray-50">รอจัดส่ง</button>
+                        <button onclick="filterOrders('UNFULFILLED')" class="filter-btn px-4 py-1.5 rounded-full text-sm whitespace-nowrap bg-white text-gray-600 border border-beige hover:bg-gray-50">รอจัดส่ง / รอรับ</button>
                         <button onclick="filterOrders('FULFILLED')" class="filter-btn px-4 py-1.5 rounded-full text-sm whitespace-nowrap bg-white text-gray-600 border border-beige hover:bg-gray-50">จัดส่งแล้ว</button>
-                        <button onclick="filterOrders('PICKED_UP')" class="filter-btn px-4 py-1.5 rounded-full text-sm whitespace-nowrap bg-white text-gray-600 border border-beige hover:bg-gray-50">รับแล้ว</button>
+                        <button onclick="filterOrders('PICKED_UP')" class="filter-btn px-4 py-1.5 rounded-full text-sm whitespace-nowrap bg-white text-gray-600 border border-beige hover:bg-gray-50">รับของแล้ว</button>
                     </div>
                     <div class="flex flex-col sm:flex-row items-center gap-3">
                         <div class="text-sm text-gray-500 font-medium">
@@ -226,7 +233,7 @@
             <!-- Header -->
             <div class="px-6 py-4 border-b border-beige bg-cream flex justify-between items-center">
                 <div>
-                    <h3 class="text-2xl font-bold text-navy" id="omId">#HANKY-0000</h3>
+                    <h3 class="text-2xl font-bold text-navy" id="omId">#DREAM-0000</h3>
                     <div class="text-sm text-gray-500 mt-0.5" id="omDate">วันที่</div>
                 </div>
                 <div class="flex gap-2 mr-10">
@@ -259,7 +266,7 @@
                                     <div class="flex items-center gap-3">
                                         <div class="w-10 h-10 bg-cream rounded-lg flex items-center justify-center text-orange"><i class="ph ph-gift text-xl"></i></div>
                                         <div>
-                                            <div class="font-bold text-navy text-sm">แคแสดในความทรงจำ | Cassia Memory</div>
+                                            <div class="font-bold text-navy text-sm">ลายฝันวันวาน | DREAMS OF YESTERDAY</div>
                                             <div class="text-xs text-charcoal/60">฿200 / ชิ้น</div>
                                         </div>
                                     </div>
@@ -328,7 +335,7 @@
 
     <!-- JAVASCRIPT -->
     <script>
-        var API_URL = "https://script.google.com/macros/s/AKfycbzQSyhb314NCKois8dMcamyMiL73Yx2Soyyy75k44F83p21-EWz9lEmpq0T7XQkRNfI7g/exec";
+        var API_URL = "https://script.google.com/macros/s/AKfycbzZOwDHhvj9xCjoAg_oQtBJhm743t6WfTCAGpPphNgbtyTqsh5qf9iNLBsMs7KsE5Cp/exec";
         var password = "";
         var allData = { orders: [], storeStatus: 'CLOSED', cutoffDate: '' };
         var currentFilter = 'ALL';
@@ -431,21 +438,26 @@
             allData = data;
             
             // Update Overview
-            let totalRevenue = 0;
+            let totalProduct = 0;
+            let totalShipping = 0;
             let pendingCount = 0;
             let totalItems = 0;
 
             const orders = data.orders || [];
             
             orders.forEach(o => {
-                if (o.paymentStatus === 'PAID') totalRevenue += Number(o.total || 0);
+                if (o.paymentStatus === 'PAID') {
+                    totalProduct += Number(o.subtotal || 0);
+                    totalShipping += Number(o.shippingFee || 0);
+                }
                 if (o.paymentStatus === 'PENDING') pendingCount++;
                 if (o.paymentStatus !== 'REJECTED') {
                     totalItems += Number(o.quantity || 1); // Assuming 1 item per order if not specified
                 }
             });
 
-            document.getElementById('statRevenue').innerText = `฿${totalRevenue.toLocaleString()}`;
+            document.getElementById('statProduct').innerText = `฿${totalProduct.toLocaleString()}`;
+            document.getElementById('statShipping').innerText = `฿${totalShipping.toLocaleString()}`;
             document.getElementById('statOrders').innerText = orders.length;
             document.getElementById('statPending').innerText = pendingCount;
             document.getElementById('statTotalItems').innerText = totalItems;
@@ -534,7 +546,7 @@
                 
                 // Badges
                 const payBadge = getPaymentBadge(order.paymentStatus);
-                const fulBadge = getFulfillmentBadge(order.fulfillmentStatus);
+                const fulBadge = getFulfillmentBadge(order.fulfillmentStatus, order.deliveryMethod);
                 const delBadge = isPickup ? 
                     `<span class="inline-flex items-center gap-1 bg-purple-100 text-purple-700 text-xs px-2 py-1 rounded font-medium"><i class="ph ph-storefront"></i> รับหน้างาน</span>` : 
                     `<span class="inline-flex items-center gap-1 bg-blue-100 text-blue-700 text-xs px-2 py-1 rounded font-medium"><i class="ph ph-truck"></i> จัดส่ง</span>`;
@@ -624,13 +636,21 @@
             updateSelectStyle(paySel, order.paymentStatus);
 
             const fulSel = document.getElementById('omFulSelect');
-            fulSel.value = order.fulfillmentStatus;
-            // Hide "FULFILLED" for pickup
+            fulSel.innerHTML = '';
             if (order.deliveryMethod === 'pickup') {
-                fulSel.querySelector('option[value="FULFILLED"]').style.display = 'none';
+                fulSel.innerHTML = `
+                    <option value="UNFULFILLED" class="text-navy">รอรับหน้าร้าน</option>
+                    <option value="PICKED_UP" class="text-navy">รับของแล้ว</option>
+                `;
+                if (order.fulfillmentStatus === 'FULFILLED') order.fulfillmentStatus = 'PICKED_UP';
             } else {
-                fulSel.querySelector('option[value="FULFILLED"]').style.display = 'block';
+                fulSel.innerHTML = `
+                    <option value="UNFULFILLED" class="text-navy">รอจัดส่ง</option>
+                    <option value="FULFILLED" class="text-navy">จัดส่งแล้ว</option>
+                `;
+                if (order.fulfillmentStatus === 'PICKED_UP') order.fulfillmentStatus = 'FULFILLED';
             }
+            fulSel.value = order.fulfillmentStatus;
             updateSelectStyle(fulSel, order.fulfillmentStatus);
 
             document.getElementById('omTracking').innerText = order.trackingNumber || '-';
@@ -747,7 +767,7 @@
                                     ต.ในเมือง อ.เมือง จ.นครศรีฯ 80000<br>
                                     โทร: 062-997-9695
                                 </div>
-                                <div class="brand">แคแสดในความทรงจำ | Cassia Memory</div>
+                                <div class="brand">ลายฝันวันวาน | DREAMS OF YESTERDAY</div>
                             </div>
                             <div class="receiver-title">ผู้รับ:</div>
                             <div class="receiver">
@@ -835,23 +855,24 @@
         }
 
         async function updateOrder(orderId, updates) {
-            showLoading('กำลังอัปเดต...');
+            const idx = allData.orders.findIndex(o => o.orderId === orderId);
+            if (idx === -1) return;
+            const oldData = { ...allData.orders[idx] };
+            allData.orders[idx] = { ...allData.orders[idx], ...updates };
+            processData(allData); 
+            Toast.fire({ icon: 'info', title: 'กำลังบันทึกข้อมูล...' });
+
             try {
                 const payload = { action: 'updateOrderStatus', password, orderId, ...updates };
-                await callAPI(payload);
-                
-                // Update local data
-                const idx = allData.orders.findIndex(o => o.orderId === orderId);
-                if (idx > -1) {
-                    allData.orders[idx] = { ...allData.orders[idx], ...updates };
-                }
-                
-                processData(allData); // Re-render
-                hideLoading();
+                await callAPI(payload, true);
                 Toast.fire({ icon: 'success', title: 'อัปเดตสำเร็จ' });
             } catch (err) {
-                hideLoading();
-                Swal.fire('ข้อผิดพลาด', err.message, 'error');
+                allData.orders[idx] = oldData;
+                processData(allData);
+                if (currentViewedOrderId === orderId) {
+                    openOrderModal(orderId);
+                }
+                Swal.fire('ข้อผิดพลาด', 'อัปเดตไม่สำเร็จ: ' + err.message, 'error');
             }
         }
 
