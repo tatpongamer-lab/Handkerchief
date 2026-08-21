@@ -227,7 +227,7 @@
 
     <!-- ORDER MODAL -->
     <div id="orderModal" class="fixed inset-0 bg-navy/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col shadow-2xl relative">
+        <div class="bg-white rounded-2xl w-full max-w-5xl max-h-[90vh] overflow-hidden flex flex-col shadow-2xl relative">
             <button onclick="closeOrderModal()" class="absolute top-4 right-4 text-gray-400 hover:text-orange z-10"><i class="ph ph-x text-2xl"></i></button>
 
             <!-- Header -->
@@ -244,9 +244,9 @@
 
             <!-- Body -->
             <div class="p-6 overflow-y-auto flex-grow">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 h-full">
                     
-                    <!-- Left Column -->
+                    <!-- Column 1 -->
                     <div class="space-y-6">
                         <!-- Customer Info -->
                         <div>
@@ -258,31 +258,6 @@
                             </div>
                         </div>
 
-                        <!-- Order Details -->
-                        <div>
-                            <h4 class="text-xs uppercase tracking-widest text-charcoal/50 font-bold mb-3 flex items-center gap-1.5"><i class="ph ph-shopping-bag text-orange text-lg"></i> รายการสินค้า</h4>
-                            <div class="bg-white rounded-xl border border-beige overflow-hidden">
-                                <div class="p-4 flex items-center justify-between border-b border-beige/50 bg-gray-50/50">
-                                    <div class="flex items-center gap-3">
-                                        <div class="w-10 h-10 bg-cream rounded-lg flex items-center justify-center text-orange"><i class="ph ph-gift text-xl"></i></div>
-                                        <div>
-                                            <div class="font-bold text-navy text-sm">ลายฝันวันวาน | DREAMS OF YESTERDAY</div>
-                                            <div class="text-xs text-charcoal/60">฿200 / ชิ้น</div>
-                                        </div>
-                                    </div>
-                                    <div class="font-bold text-navy">x<span id="omQty">0</span></div>
-                                </div>
-                                <div class="p-4 space-y-2 bg-white">
-                                    <div class="flex justify-between text-sm"><span class="text-charcoal/60">ยอดรวมสินค้า</span><span id="omSubtotal" class="font-medium text-navy">฿0</span></div>
-                                    <div class="flex justify-between text-sm"><span class="text-charcoal/60">ค่าจัดส่ง</span><span id="omShipping" class="font-medium text-navy">฿0</span></div>
-                                    <div class="flex justify-between items-center pt-2 mt-2 border-t border-beige/50"><span class="font-bold text-navy">ยอดสุทธิ</span><span id="omTotal" class="text-lg font-bold text-orange">฿0</span></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Right Column -->
-                    <div class="space-y-6">
                         <!-- Status -->
                         <div>
                             <h4 class="text-xs uppercase tracking-widest text-charcoal/50 font-bold mb-3 flex items-center gap-1.5"><i class="ph ph-tag text-orange text-lg"></i> สถานะ</h4>
@@ -312,11 +287,39 @@
                                 </div>
                             </div>
                         </div>
-                        
-                        <!-- Slip Section -->
+                    </div>
+
+                    <!-- Column 2 -->
+                    <div class="space-y-6">
+                        <!-- Order Details -->
                         <div>
+                            <h4 class="text-xs uppercase tracking-widest text-charcoal/50 font-bold mb-3 flex items-center gap-1.5"><i class="ph ph-shopping-bag text-orange text-lg"></i> รายการสินค้า</h4>
+                            <div class="bg-white rounded-xl border border-beige overflow-hidden">
+                                <div class="p-4 flex items-center justify-between border-b border-beige/50 bg-gray-50/50">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-10 h-10 bg-cream rounded-lg flex items-center justify-center text-orange"><i class="ph ph-gift text-xl"></i></div>
+                                        <div>
+                                            <div class="font-bold text-navy text-sm">ลายฝันวันวาน | DREAMS OF YESTERDAY</div>
+                                            <div class="text-xs text-charcoal/60">฿200 / ชิ้น</div>
+                                        </div>
+                                    </div>
+                                    <div class="font-bold text-navy">x<span id="omQty">0</span></div>
+                                </div>
+                                <div class="p-4 space-y-2 bg-white">
+                                    <div class="flex justify-between text-sm"><span class="text-charcoal/60">ยอดรวมสินค้า</span><span id="omSubtotal" class="font-medium text-navy">฿0</span></div>
+                                    <div class="flex justify-between text-sm"><span class="text-charcoal/60">ค่าจัดส่ง</span><span id="omShipping" class="font-medium text-navy">฿0</span></div>
+                                    <div class="flex justify-between items-center pt-2 mt-2 border-t border-beige/50"><span class="font-bold text-navy">ยอดสุทธิ</span><span id="omTotal" class="text-lg font-bold text-orange">฿0</span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Column 3 -->
+                    <div class="space-y-6 flex flex-col h-full min-h-[300px]">
+                        <!-- Slip Section -->
+                        <div class="flex flex-col h-full">
                             <h4 class="text-xs uppercase tracking-widest text-charcoal/50 font-bold mb-3 flex items-center gap-1.5"><i class="ph ph-image text-orange text-lg"></i> สลิปโอนเงิน</h4>
-                            <div id="omSlipContainer" class="bg-gray-50 rounded-xl p-3 border border-beige/50 text-center flex items-center justify-center min-h-[120px]">
+                            <div id="omSlipContainer" class="bg-gray-50 rounded-xl p-3 border border-beige/50 flex items-center justify-center flex-grow h-full relative">
                                 <!-- Render slip button or img here -->
                             </div>
                         </div>
@@ -341,6 +344,15 @@
         var currentFilter = 'ALL';
         var currentFilteredOrders = [];
         var currentViewedIndex = -1;
+
+        function escapeHtml(str) {
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
 
         // SweetAlert2 Toast configuration
         const Toast = Swal.mixin({
@@ -483,14 +495,14 @@
             renderOrders();
         }
 
-        function switchTab(tabId) {
+        function switchTab(tabId, e) {
             document.querySelectorAll('.content-tab').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.nav-link').forEach(el => el.classList.remove('active', 'bg-white/10', 'text-orange'));
             
             document.getElementById(`tab-${tabId}`).classList.add('active');
             
             // Highlight nav
-            const eventTarget = event.currentTarget;
+            const eventTarget = e ? e.currentTarget : (window.event ? window.event.currentTarget : null);
             if (eventTarget) {
                 document.querySelectorAll('.nav-link').forEach(el => {
                     el.classList.add('text-cream/80');
@@ -558,18 +570,18 @@
                         </div>
                         <div class="flex-grow md:pl-10">
                             <div class="flex flex-wrap items-center gap-2 mb-2 pr-8 md:pr-0">
-                                <span class="font-bold text-navy text-lg">#${order.orderId}</span>
+                                <span class="font-bold text-navy text-lg">#${escapeHtml(order.orderId)}</span>
                                 ${payBadge}
                                 ${fulBadge}
                                 ${delBadge}
                             </div>
                             
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-y-2 gap-x-4 text-sm text-gray-600 mb-4">
-                                <div><i class="ph ph-user mr-1 text-gray-400"></i> <span class="font-medium text-charcoal">${order.customerName}</span></div>
-                                <div><i class="ph ph-phone mr-1 text-gray-400"></i> ${order.phone}</div>
+                                <div><i class="ph ph-user mr-1 text-gray-400"></i> <span class="font-medium text-charcoal">${escapeHtml(order.customerName)}</span></div>
+                                <div><i class="ph ph-phone mr-1 text-gray-400"></i> ${escapeHtml(order.phone)}</div>
                                 <div><i class="ph ph-stack mr-1 text-gray-400"></i> จำนวน: <span class="font-medium text-charcoal">${order.quantity} ชิ้น</span></div>
                                 <div><i class="ph ph-money mr-1 text-gray-400"></i> ยอดรวม: <span class="font-bold text-orange">฿${order.total}</span></div>
-                                ${order.trackingNumber ? `<div class="col-span-1 md:col-span-2 text-blue-600"><i class="ph ph-package mr-1"></i> Tracking: ${order.trackingNumber}</div>` : ''}
+                                ${order.trackingNumber ? `<div class="col-span-1 md:col-span-2 text-blue-600"><i class="ph ph-package mr-1"></i> Tracking: ${escapeHtml(order.trackingNumber)}</div>` : ''}
                             </div>
                         </div>
                         
@@ -599,7 +611,7 @@
                 'REJECTED': { class: 'bg-red-100 text-red-800', text: 'ปฏิเสธ/ไม่ผ่าน' }
             };
             const s = map[status] || { class: 'bg-gray-100 text-gray-800', text: status };
-            return `<span class="${s.class} text-[10px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wider">${s.text}</span>`;
+            return `<span class="${s.class} text-[10px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wider">${escapeHtml(s.text)}</span>`;
         }
 
         function getFulfillmentBadge(status) {
@@ -609,7 +621,7 @@
                 'PICKED_UP': { class: 'bg-purple-100 text-purple-700', text: 'รับแล้ว' }
             };
             const s = map[status] || { class: 'bg-gray-100 text-gray-800', text: status };
-            return `<span class="${s.class} text-[10px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wider">${s.text}</span>`;
+            return `<span class="${s.class} text-[10px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wider">${escapeHtml(s.text)}</span>`;
         }
 
         // --- Order Modal Logic ---
@@ -637,21 +649,23 @@
 
             const fulSel = document.getElementById('omFulSelect');
             fulSel.innerHTML = '';
+            let currentFulStatus = order.fulfillmentStatus;
+
             if (order.deliveryMethod === 'pickup') {
                 fulSel.innerHTML = `
                     <option value="UNFULFILLED" class="text-navy">รอรับหน้าร้าน</option>
                     <option value="PICKED_UP" class="text-navy">รับของแล้ว</option>
                 `;
-                if (order.fulfillmentStatus === 'FULFILLED') order.fulfillmentStatus = 'PICKED_UP';
+                if (currentFulStatus === 'FULFILLED') currentFulStatus = 'PICKED_UP';
             } else {
                 fulSel.innerHTML = `
                     <option value="UNFULFILLED" class="text-navy">รอจัดส่ง</option>
                     <option value="FULFILLED" class="text-navy">จัดส่งแล้ว</option>
                 `;
-                if (order.fulfillmentStatus === 'PICKED_UP') order.fulfillmentStatus = 'FULFILLED';
+                if (currentFulStatus === 'PICKED_UP') currentFulStatus = 'FULFILLED';
             }
-            fulSel.value = order.fulfillmentStatus;
-            updateSelectStyle(fulSel, order.fulfillmentStatus);
+            fulSel.value = currentFulStatus;
+            updateSelectStyle(fulSel, currentFulStatus);
 
             document.getElementById('omTracking').innerText = order.trackingNumber || '-';
             
@@ -662,7 +676,7 @@
             
             const slipContainer = document.getElementById('omSlipContainer');
             if (order.slipUrl) {
-                slipContainer.innerHTML = `<a href="${order.slipUrl}" target="_blank"><img src="${order.slipUrl}" class="max-h-40 object-contain mx-auto rounded-lg shadow-sm border border-beige hover:opacity-90 transition-opacity cursor-pointer"></a>`;
+                slipContainer.innerHTML = `<a href="${order.slipUrl}" target="_blank" class="w-full h-full flex items-center justify-center"><img src="${order.slipUrl}" class="max-h-[60vh] w-full h-full object-contain mx-auto rounded-lg shadow-sm border border-beige hover:opacity-90 transition-opacity cursor-pointer"></a>`;
             } else {
                 slipContainer.innerHTML = `<div class="py-4 text-gray-400"><i class="ph ph-image-broken text-3xl mb-2 flex justify-center"></i><br><span class="text-xs">ไม่มีรูปสลิป</span></div>`;
             }
@@ -724,9 +738,8 @@
                 .page { width: 210mm; min-height: 297mm; padding: 10mm; margin: 10mm auto; box-sizing: border-box; background: white; page-break-after: always; display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: repeat(4, 1fr); gap: 5mm; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
                 .label { border: 1px dashed #aaa; padding: 0; box-sizing: border-box; overflow: hidden; display: flex; flex-direction: column; position: relative; }
                 .label-body { padding: 6mm; flex-grow: 1; display: flex; flex-direction: column; }
-                .header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 1px solid #ddd; padding-bottom: 5px; margin-bottom: 10px; }
-                .sender { font-size: 9pt; color: #555; line-height: 1.2; }
-                .brand { font-size: 14pt; font-weight: bold; color: #000; text-align: right; line-height: 1.1; }
+                .header { display: flex; justify-content: center; align-items: center; border-bottom: 1px solid #ddd; padding-bottom: 5px; margin-bottom: 10px; }
+                .brand { font-size: 14pt; font-weight: bold; color: #000; text-align: center; line-height: 1.1; }
                 .receiver-title { font-weight: bold; font-size: 11pt; margin-bottom: 5px; color: #000; }
                 .receiver { font-size: 14pt; line-height: 1.4; flex-grow: 1; font-weight: 500; color: #000; }
                 .pickup-badge { font-size: 14pt; font-weight: bold; color: #000; padding: 6px 12px; border: 3px solid #000; border-radius: 6px; display: inline-block; margin-top: 8px; }
@@ -754,29 +767,23 @@
                 if (order.deliveryMethod === 'pickup') {
                     addressHtml = `<div class="pickup-badge">รับหน้าร้าน (สุมาดีเภสัช)</div>`;
                 } else {
-                    addressHtml = `${order.address}<br><b>โทร: ${order.phone}</b>`;
+                    addressHtml = `${escapeHtml(order.address)}<br><b>โทร: ${escapeHtml(order.phone)}</b>`;
                 }
 
                 html += `
                     <div class="label">
                         <div class="label-body">
                             <div class="header">
-                                <div class="sender">
-                                    <b>ผู้ส่ง:</b> สุมาดี รุจิ<br>
-                                    สุมาดีเภสัช 41/6 ถ.ศรีธรรมโศก<br>
-                                    ต.ในเมือง อ.เมือง จ.นครศรีฯ 80000<br>
-                                    โทร: 062-997-9695
-                                </div>
-                                <div class="brand">ลายฝันวันวาน | DREAMS OF YESTERDAY</div>
+                                <div class="brand">DREAMS OF YESTERDAY<br>ลายฝันวันวาน</div>
                             </div>
                             <div class="receiver-title">ผู้รับ:</div>
                             <div class="receiver">
-                                <b style="font-size: 16pt;">${order.customerName}</b><br>
+                                <b style="font-size: 16pt;">${escapeHtml(order.customerName)}</b><br>
                                 ${addressHtml}
                             </div>
                         </div>
                         <div class="order-info">
-                            <span class="order-id">#${order.orderId}</span>
+                            <span class="order-id">#${escapeHtml(order.orderId)}</span>
                             <span>จำนวน: <span class="item-qty">${order.quantity}</span> ชิ้น</span>
                         </div>
                     </div>
@@ -811,22 +818,32 @@
         async function handleFulChange(status) {
             if (!currentViewedOrderId) return;
             const orderId = currentViewedOrderId;
+            const order = currentFilteredOrders.find(o => o.orderId === orderId);
             
             if (status === 'FULFILLED') {
-                const { value: trackNum } = await Swal.fire({
+                const result = await Swal.fire({
                     title: 'จัดส่งแล้ว',
                     input: 'text',
                     inputLabel: 'กรุณากรอก Tracking Number (ถ้ามี)',
                     inputPlaceholder: 'TH123456...',
                     showCancelButton: true,
+                    showDenyButton: true,
                     confirmButtonText: 'บันทึก',
-                    cancelButtonText: 'ข้าม',
+                    denyButtonText: 'ข้าม',
+                    cancelButtonText: 'ยกเลิก',
                     confirmButtonColor: '#FF6600',
                 });
-                // Even if cancelled/skipped, we save the status. trackNum will be undefined if cancelled.
+                
+                if (result.isDismissed) {
+                    // Reset dropdown UI to current state
+                    document.getElementById('omFulSelect').value = order.fulfillmentStatus;
+                    return; // Cancelled completely
+                }
+                
+                const trackNum = result.isConfirmed ? result.value : (order.trackingNumber || '');
                 updateOrder(orderId, { 
                     fulfillmentStatus: status, 
-                    trackingNumber: (trackNum !== undefined) ? trackNum : '' 
+                    trackingNumber: trackNum 
                 });
             } else {
                 updateOrder(orderId, { fulfillmentStatus: status });
@@ -864,13 +881,14 @@
 
             try {
                 const payload = { action: 'updateOrderStatus', password, orderId, ...updates };
-                await callAPI(payload, true);
+                await callAPI(payload);
                 Toast.fire({ icon: 'success', title: 'อัปเดตสำเร็จ' });
             } catch (err) {
                 allData.orders[idx] = oldData;
                 processData(allData);
                 if (currentViewedOrderId === orderId) {
-                    openOrderModal(orderId);
+                    const rollbackIdx = currentFilteredOrders.findIndex(o => o.orderId === orderId);
+                    if (rollbackIdx !== -1) openOrderModal(rollbackIdx);
                 }
                 Swal.fire('ข้อผิดพลาด', 'อัปเดตไม่สำเร็จ: ' + err.message, 'error');
             }
@@ -909,6 +927,10 @@
 
         async function saveCutoffDate() {
             const date = document.getElementById('cutoffDateInput').value;
+            if (!date || date.trim() === '') {
+                Swal.fire('ข้อมูลไม่ครบถ้วน', 'กรุณาระบุวันที่และเวลาปิดรับ', 'warning');
+                return;
+            }
             showLoading('กำลังบันทึก...');
             try {
                 await callAPI({ action: 'setPreorderCutoff', password, cutoffDate: date });
