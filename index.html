@@ -350,7 +350,7 @@
                     <div id="slip-preview-container" class="hidden grid grid-cols-3 gap-2"></div>
 
                     <!-- Submit -->
-                    <button type="submit" type="submit" id="submit-order-btn" class="w-full floating-cta text-white py-4 rounded-xl font-bold transition-all duration-200 shadow-xl text-base">
+                    <button type="submit" id="submit-order-btn" class="w-full floating-cta text-white py-4 rounded-xl font-bold transition-all duration-200 shadow-xl text-base">
                         ยืนยันการสั่งซื้อ
                     </button>
                 </form>
@@ -446,6 +446,16 @@
         var pageQty = 1;
         var slideIndex = 0;
         var slideInterval;
+        var isSubmitting = false;
+
+        function escapeHtml(str) {
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
 
         // Init
         setupEvents();
@@ -487,7 +497,7 @@
             var bgColor = type === 'success' ? 'bg-green-600' : (type === 'error' ? 'bg-red-500' : 'bg-orange');
             toast.className = bgColor + ' text-white px-5 py-3.5 rounded-xl shadow-2xl flex items-center gap-3 transform transition-all duration-300 -translate-y-[150%] opacity-0 w-max max-w-[90vw] text-center backdrop-blur-xl';
             var icon = type === 'success' ? 'ph-check-circle' : 'ph-info';
-            toast.innerHTML = '<i class="ph ' + icon + ' text-xl"></i><span class="font-medium text-sm">' + message + '</span>';
+            toast.innerHTML = '<i class="ph ' + icon + ' text-xl"></i><span class="font-medium text-sm">' + escapeHtml(message) + '</span>';
             container.appendChild(toast);
             requestAnimationFrame(function() { requestAnimationFrame(function() { toast.classList.remove('-translate-y-[150%]', 'opacity-0'); }); });
             setTimeout(function() {
@@ -647,7 +657,17 @@
                             ctx.drawImage(img, 0, 0, w, h);
                             slipBase64Data.push(canvas.toDataURL('image/jpeg', 0.6).split(',')[1]);
                             processedCount++;
-                            if (processedCount === files.length) renderSlipPreviews();
+                            if (processedCount === files.length) {
+                                renderSlipPreviews();
+                                fileInput.value = '';
+                            }
+                        };
+                        img.onerror = function() {
+                            processedCount++;
+                            if (processedCount === files.length) {
+                                renderSlipPreviews();
+                                fileInput.value = '';
+                            }
                         };
                         img.src = evt.target.result;
                     };
@@ -683,10 +703,20 @@
 
         // --- Submit Order ---
         function submitOrder() {
+            if (isSubmitting) return;
             var name = document.getElementById('cust-name').value.trim();
             var phone = document.getElementById('cust-phone').value.trim();
             var isPickup = document.querySelector('input[name="shipping-option"]:checked').value === 'pickup';
             var address = isPickup ? '' : document.getElementById('cust-address').value.trim();
+
+            if (!name) {
+                showToast('กรุณากรอกชื่อ-นามสกุล', 'warning');
+                return;
+            }
+            if (!isPickup && !address) {
+                showToast('กรุณากรอกที่อยู่สำหรับจัดส่ง', 'warning');
+                return;
+            }
 
             if(!/^0[0-9]{9}$/.test(phone)) {
                 showToast('กรุณากรอกเบอร์โทรศัพท์ 10 หลักให้ถูกต้อง', 'warning');
@@ -713,13 +743,15 @@
             };
             if(isAdminMode) payload.adminPassword = document.getElementById('admin-pwd').value;
 
+            isSubmitting = true;
             fetch(API_URL, { method: 'POST', mode: 'cors', body: JSON.stringify(payload) })
             .then(function(res) { return res.json(); })
             .then(function(data) {
+                isSubmitting = false;
                 document.getElementById('loading-overlay').classList.add('hidden');
                 document.getElementById('loading-overlay').classList.remove('flex');
                 if(data.success) {
-                    document.getElementById('order-number').innerText = data.orderId;
+                    document.getElementById('order-number').innerText = escapeHtml(data.orderId);
                     if(isAdminMode) document.getElementById('payment-status-text').innerText = '✅ สปอนเซอร์ฟรี';
                     document.getElementById('success-modal').classList.remove('hidden');
                     document.getElementById('success-modal').classList.add('flex');
@@ -729,6 +761,7 @@
                 }
             })
             .catch(function() {
+                isSubmitting = false;
                 document.getElementById('loading-overlay').classList.add('hidden');
                 document.getElementById('loading-overlay').classList.remove('flex');
                 showToast('ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้', 'error');
@@ -746,6 +779,7 @@
         }
 
         function doSearchOrders(phone, resultsId, btnId) {
+            if (isSubmitting) return;
             var results = document.getElementById(resultsId);
             var btn = document.getElementById(btnId);
             if (!/^0[0-9]{9}$/.test(phone)) {
@@ -753,6 +787,7 @@
                 return;
             }
             btn.disabled = true;
+            isSubmitting = true;
             var orgText = btn.innerHTML;
             btn.innerHTML = '<i class="ph ph-spinner animate-spin"></i>';
             results.innerHTML = '<div class="flex flex-col items-center justify-center py-12 text-slate/40"><div class="w-10 h-10 border-2 border-gold/20 border-t-gold rounded-full animate-spin mb-3"></div><p class="text-sm text-slate/50">กำลังค้นหา...</p></div>';
@@ -795,13 +830,13 @@
                     fStat = { t: 'รอจัดส่ง', cls: 'bg-amber-500/20 text-amber-400 border-amber-500/30', i: 'ph-clock' };
                 }
             }
-            var trackHTML = order.trackingNumber ? '<div class="mt-3 bg-blue-500/10 px-3 py-2 rounded-lg text-xs text-blue-400 border border-blue-500/20"><i class="ph ph-package mr-1"></i> เลขพัสดุ: ' + order.trackingNumber + '</div>' : '';
+            var trackHTML = order.trackingNumber ? '<div class="mt-3 bg-blue-500/10 px-3 py-2 rounded-lg text-xs text-blue-400 border border-blue-500/20"><i class="ph ph-package mr-1"></i> เลขพัสดุ: ' + escapeHtml(order.trackingNumber) + '</div>' : '';
             var dateStr = order.date ? new Date(order.date).toLocaleDateString('th-TH', { year: 'numeric', month: 'short', day: 'numeric'}) : '';
             var qty = order.quantity || 1;
 
             return '<div class="glass-card rounded-xl p-5 mb-3">' +
                 '<div class="flex justify-between items-start mb-3">' +
-                    '<div><div class="text-[10px] text-slate/60 uppercase tracking-wider">ออเดอร์</div><div class="font-heading font-bold text-cream">' + order.orderId + '</div></div>' +
+                    '<div><div class="text-[10px] text-slate/60 uppercase tracking-wider">ออเดอร์</div><div class="font-heading font-bold text-cream">' + escapeHtml(order.orderId) + '</div></div>' +
                     '<div class="text-[10px] text-slate/50">' + dateStr + '</div></div>' +
                 '<div class="text-xs text-slate mb-3"><i class="ph ph-shopping-bag text-gold mr-1"></i> ลายฝันวันวาน ×' + qty + '</div>' +
                 '<div class="flex items-center justify-between">' +
